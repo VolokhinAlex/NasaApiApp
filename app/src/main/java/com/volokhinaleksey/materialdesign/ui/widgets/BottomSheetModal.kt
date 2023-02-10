@@ -1,6 +1,9 @@
 package com.volokhinaleksey.materialdesign.ui.widgets
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
@@ -22,21 +25,23 @@ fun BottomSheetModal(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState
     ) {
-        Text(
-            text = nasaDataDTO.title.orEmpty(),
-            modifier = Modifier.padding(8.dp),
-            fontSize = 25.sp
-        )
-        SetTextBottomSheet(text = nasaDataDTO.copyright.orEmpty())
-        SetTextBottomSheet(text = nasaDataDTO.explanation.orEmpty())
-        SetTextBottomSheet(text = nasaDataDTO.date.orEmpty())
-        SetTextBottomSheet(text = nasaDataDTO.mediaType.orEmpty())
+        Column(Modifier.verticalScroll(rememberScrollState())) {
+            Text(
+                text = nasaDataDTO.title.orEmpty(),
+                modifier = Modifier.padding(8.dp),
+                fontSize = 25.sp
+            )
+            SetTextBottomSheet(text = nasaDataDTO.copyright.orEmpty())
+            SetTextBottomSheet(text = nasaDataDTO.explanation.orEmpty())
+            SetTextBottomSheet(text = nasaDataDTO.date.orEmpty())
+            SetTextBottomSheet(text = nasaDataDTO.mediaType.orEmpty())
+        }
     }
 
 }
 
 @Composable
-private fun SetTextBottomSheet(text: String) {
+fun SetTextBottomSheet(text: String) {
     Text(
         text = text,
         modifier = Modifier.padding(8.dp),

@@ -1,10 +1,10 @@
 package com.volokhinaleksey.materialdesign.ui.screens
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -13,7 +13,6 @@ import com.volokhinaleksey.materialdesign.model.NasaDataDTO
 import com.volokhinaleksey.materialdesign.states.PictureOfTheDayState
 import com.volokhinaleksey.materialdesign.ui.widgets.*
 import com.volokhinaleksey.materialdesign.viewmodels.PictureViewModel
-import java.util.*
 
 @Composable
 fun PictureOfTheDayScreen(pictureViewModel: PictureViewModel) {
@@ -27,17 +26,11 @@ fun PictureOfTheDayScreen(pictureViewModel: PictureViewModel) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RenderData(
     state: PictureOfTheDayState,
     searchState: SearchState = rememberSearchState(),
 ) {
-    val openBottomSheet = rememberSaveable {
-        mutableStateOf(false)
-    }
-    val skipHalfExpanded = remember { mutableStateOf(false) }
-    val sheetState = rememberSheetState(skipHalfExpanded = skipHalfExpanded.value)
     val chipsList = listOf("Image HD", "Image")
     var selectedItem by remember {
         mutableStateOf("")
@@ -60,26 +53,11 @@ private fun RenderData(
 
                 SetImageByChips(selectedItem = selectedItem, nasaDataDTO)
 
-                Button(onClick = {
-                    openBottomSheet.value = true
-                }, modifier = Modifier.padding(10.dp)) {
-                    Text(text = "Image Description")
-                }
-
                 ChipsWidget(chipsList) {
                     selectedItem = it
                 }
 
-                if (openBottomSheet.value) {
-                    BottomSheetModal(
-                        onDismissRequest = {
-                            openBottomSheet.value = false
-                        },
-                        sheetState = sheetState,
-                        nasaDataDTO = nasaDataDTO
-                    )
-                }
-
+                BottomSheetBehavior(nasaDataDTO = nasaDataDTO)
             }
         }
     }
