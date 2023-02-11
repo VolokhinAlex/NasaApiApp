@@ -43,7 +43,7 @@ private fun SearchField(
                 modifier = Modifier.clickable {
                     ContextCompat.startActivity(context, Intent(Intent.ACTION_VIEW).apply {
                         data =
-                            Uri.parse("https://en.wikipedia.org/wiki/${query}")
+                            Uri.parse("https://en.wikipedia.org/wiki/${query.text}")
                     }, null)
 
                 }
