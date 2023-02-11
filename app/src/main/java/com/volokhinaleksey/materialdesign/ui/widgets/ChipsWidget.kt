@@ -1,6 +1,7 @@
 package com.volokhinaleksey.materialdesign.ui.widgets
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,8 +24,8 @@ fun ChipsWidget(chips: List<String>, onSelected: (String) -> Unit) {
     var selected by remember { mutableStateOf("") }
     Row(
         modifier = Modifier
-            .padding(start = 30.dp, top = 50.dp)
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
     ) {
         chips.forEach { chip ->
             Chip(

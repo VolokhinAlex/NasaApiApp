@@ -43,7 +43,7 @@ fun BottomSheetBehavior(nasaDataDTO: NasaDataDTO) {
                             .clip(
                                 RoundedCornerShape(30.dp)
                             ),
-                        color = MaterialTheme.colorScheme.surfaceVariant
+                        color = MaterialTheme.colorScheme.secondary
                     )
                 }
                 Text(
@@ -57,7 +57,7 @@ fun BottomSheetBehavior(nasaDataDTO: NasaDataDTO) {
                 SetTextBottomSheet(text = nasaDataDTO.mediaType.orEmpty())
             }
         },
-        sheetBackgroundColor = Black10,
+        sheetBackgroundColor = MaterialTheme.colorScheme.onSecondary,
         sheetElevation = SheetElevation,
         sheetShape = RoundedCornerShape(topStart = SheetCornerShape, topEnd = SheetCornerShape),
         scaffoldState = scaffoldState,

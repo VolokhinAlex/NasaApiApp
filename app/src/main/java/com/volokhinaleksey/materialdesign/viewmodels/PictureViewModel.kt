@@ -1,43 +1,37 @@
 package com.volokhinaleksey.materialdesign.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.volokhinaleksey.materialdesign.model.NasaDataDTO
+import androidx.lifecycle.*
 import com.volokhinaleksey.materialdesign.repository.NasaApiHolder
 import com.volokhinaleksey.materialdesign.repository.PictureRepository
 import com.volokhinaleksey.materialdesign.repository.PictureRepositoryImpl
 import com.volokhinaleksey.materialdesign.states.PictureOfTheDayState
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class PictureViewModel(private val pictureRepository: PictureRepository) : ViewModel() {
 
-    private var _pictureOfTheDay: MutableLiveData<PictureOfTheDayState> =
+    private val _pictureOfTheDay: MutableLiveData<PictureOfTheDayState> =
         MutableLiveData(PictureOfTheDayState.Loading)
 
     val pictureOfTheDay: LiveData<PictureOfTheDayState> get() = _pictureOfTheDay
 
-    private val callback = object : Callback<NasaDataDTO> {
-        override fun onResponse(call: Call<NasaDataDTO>, response: Response<NasaDataDTO>) {
-            val serverResponse = response.body()
-            _pictureOfTheDay.value = if (response.isSuccessful && serverResponse != null) {
-                PictureOfTheDayState.Success(serverResponse)
-            } else {
-                PictureOfTheDayState.Error(Throwable("SERVER ERROR"))
-            }
-        }
-
-        override fun onFailure(call: Call<NasaDataDTO>, error: Throwable) {
-            PictureOfTheDayState.Error(error)
-        }
+    init {
+        getPictureOfTheDay()
     }
 
-    fun getPictureOfTheDay() {
+    private fun getPictureOfTheDay() {
         _pictureOfTheDay.value = PictureOfTheDayState.Loading
-        pictureRepository.getPictureOfTheDay(callBack = callback)
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = pictureRepository.getPictureOfTheDay()
+            val responseData = response.body()
+            _pictureOfTheDay.postValue(
+                if (response.isSuccessful && responseData != null) {
+                    PictureOfTheDayState.Success(responseData)
+                } else {
+                    PictureOfTheDayState.Error(Throwable(response.message()))
+                }
+            )
+        }
     }
 
 }

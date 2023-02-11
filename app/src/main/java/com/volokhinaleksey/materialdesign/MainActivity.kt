@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -12,13 +13,17 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.volokhinaleksey.materialdesign.ui.navigation.ScreenState
 import com.volokhinaleksey.materialdesign.ui.screens.PictureOfTheDayScreen
+import com.volokhinaleksey.materialdesign.ui.screens.SearchScreen
+import com.volokhinaleksey.materialdesign.ui.screens.SettingsScreen
 import com.volokhinaleksey.materialdesign.ui.theme.MaterialDesignTheme
-import com.volokhinaleksey.materialdesign.ui.widgets.DropDownMenuWidget
+import com.volokhinaleksey.materialdesign.ui.theme_state.ThemeState
+import com.volokhinaleksey.materialdesign.ui.theme_state.rememberThemeState
 import com.volokhinaleksey.materialdesign.viewmodels.PictureViewModel
 import com.volokhinaleksey.materialdesign.viewmodels.PictureViewModelFactory
 
@@ -29,12 +34,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialDesignTheme {
+            val themeState = rememberThemeState()
+            MaterialDesignTheme(darkTheme = themeState.state) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Navigation(pictureViewModel = pictureViewModel)
+                    Navigation(
+                        pictureViewModel = pictureViewModel,
+                        themeState = themeState
+                    )
                 }
             }
         }
@@ -42,13 +51,13 @@ class MainActivity : ComponentActivity() {
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Navigation(
-    pictureViewModel: PictureViewModel
+    pictureViewModel: PictureViewModel,
+    themeState: ThemeState
 ) {
     val navController = rememberNavController()
-    Scaffold(bottomBar = { AppBottomBar() }) {
+    AppBottomBar(navController = navController) {
         NavHost(
             navController = navController,
             startDestination = ScreenState.PictureOfDayScreen.route,
@@ -57,35 +66,57 @@ fun Navigation(
             composable(route = ScreenState.PictureOfDayScreen.route) {
                 PictureOfTheDayScreen(pictureViewModel = pictureViewModel)
             }
+            composable(route = ScreenState.SettingsScreen.route) {
+                SettingsScreen(themeState = themeState)
+            }
+            composable(route = ScreenState.SearchScreen.route) {
+                SearchScreen()
+            }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppBottomBar() {
-    var expanded by remember { mutableStateOf(false) }
-    DropDownMenuWidget(expanded = expanded) { expanded = false }
-    BottomAppBar(
-        containerColor = MaterialTheme.colorScheme.primary,
-        actions = {
-            IconButton(onClick = {}) {
-                Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Color.White)
+fun AppBottomBar(
+    navController: NavController,
+    content: @Composable (PaddingValues) -> Unit
+) {
+    Scaffold(bottomBar = {
+        BottomAppBar(
+            containerColor = MaterialTheme.colorScheme.primary,
+            actions = {
+                IconButton(onClick = { navController.navigate(ScreenState.PictureOfDayScreen.route) }) {
+                    Icon(Icons.Default.Home, contentDescription = "Home", tint = Color.White)
+                }
+                IconButton(onClick = { navController.navigate(ScreenState.SettingsScreen.route) }) {
+                    Icon(
+                        Icons.Default.Settings,
+                        contentDescription = "Settings",
+                        tint = Color.White
+                    )
+                }
+                IconButton(onClick = { navController.navigate(ScreenState.SearchScreen.route) }) {
+                    Icon(
+                        Icons.Default.Search,
+                        contentDescription = "Search",
+                        tint = Color.White
+                    )
+                }
+            },
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = { },
+                    containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
+                    elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
+                ) {
+                    Icon(Icons.Filled.Add, "")
+                }
             }
-            IconButton(onClick = { expanded = true }) {
-                Icon(Icons.Default.MoreVert, contentDescription = "More", tint = Color.White)
-            }
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { },
-                containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
-                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
-            ) {
-                Icon(Icons.Filled.Add, "")
-            }
-        }
-    )
+        )
+    }, content = content)
 }
+
 
 
 
