@@ -12,7 +12,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.volokhinaleksey.materialdesign.model.NasaDataDTO
-import com.volokhinaleksey.materialdesign.ui.theme.Black10
 import com.volokhinaleksey.materialdesign.ui.widgets.bottom_sheet_scaffold.BottomSheetScaffold
 import com.volokhinaleksey.materialdesign.ui.widgets.bottom_sheet_scaffold.rememberBottomSheetScaffoldState
 

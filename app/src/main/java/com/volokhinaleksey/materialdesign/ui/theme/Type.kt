@@ -12,7 +12,7 @@ import com.volokhinaleksey.materialdesign.R
 val customFontMontserrat = FontFamily(Font(R.font.montserrat, FontWeight.Normal))
 val Typography = Typography(
     bodyLarge = TextStyle(
-        fontFamily = customFontMontserrat,
+        fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,

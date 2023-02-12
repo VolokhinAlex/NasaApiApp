@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.volokhinaleksey.materialdesign.ui.theme.Purple40
-import com.volokhinaleksey.materialdesign.ui.theme.Purple80
+import com.volokhinaleksey.materialdesign.ui.theme.PrimaryDark
 
 @Composable
 fun ChipsWidget(chips: List<String>, onSelected: (String) -> Unit) {
@@ -60,7 +60,7 @@ private fun Chip(
         },
         label = { Text(text = title, fontSize = 16.sp) },
         colors = AssistChipDefaults.assistChipColors(
-            containerColor = if (isSelected) Purple40 else Purple80,
+            containerColor = if (isSelected) Purple40 else PrimaryDark,
             labelColor = if (isSelected) Color.White else Color.Black
         ),
         modifier = Modifier.padding(5.dp)
