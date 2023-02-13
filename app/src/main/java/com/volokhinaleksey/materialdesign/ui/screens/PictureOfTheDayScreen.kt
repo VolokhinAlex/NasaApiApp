@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.volokhinaleksey.materialdesign.model.NasaDataDTO
 import com.volokhinaleksey.materialdesign.states.PictureOfTheDayState
 import com.volokhinaleksey.materialdesign.ui.images.CoilImageLoader
@@ -18,7 +19,7 @@ import com.volokhinaleksey.materialdesign.ui.widgets.*
 import com.volokhinaleksey.materialdesign.viewmodels.PictureViewModel
 
 @Composable
-fun PictureOfTheDayScreen(pictureViewModel: PictureViewModel) {
+fun PictureOfTheDayScreen(pictureViewModel: PictureViewModel = hiltViewModel()) {
     val coilImageLoader by remember {
         mutableStateOf(CoilImageLoader())
     }
