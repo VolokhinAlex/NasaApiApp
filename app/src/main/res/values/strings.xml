@@ -5,4 +5,5 @@
     <string name="mars_photos_screen">Mars photos</string>
     <string name="current_version">Current version of the application</string>
     <string name="about_app">The application data is created to receive data from NASA and display them</string>
+    <string name="mars_photos">Mars photos</string>
 </resources>

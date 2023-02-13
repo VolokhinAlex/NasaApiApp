@@ -1,12 +1,11 @@
 package com.volokhinaleksey.materialdesign.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,19 +14,50 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.volokhinaleksey.materialdesign.R
 import com.volokhinaleksey.materialdesign.states.MarsPhotosState
 import com.volokhinaleksey.materialdesign.ui.images.CoilImageLoader
 import com.volokhinaleksey.materialdesign.ui.widgets.ErrorMessage
 import com.volokhinaleksey.materialdesign.ui.widgets.LoadingProgressBar
 import com.volokhinaleksey.materialdesign.viewmodels.MarsPhotosViewModel
+import me.onebone.toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.ScrollStrategy
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
 fun MarsPhotosScreen(marsPhotosViewModel: MarsPhotosViewModel = hiltViewModel()) {
-    marsPhotosViewModel.marsPhotos.observeAsState().value?.let {
-        RenderData(marsPhotosState = it)
+    val state = rememberCollapsingToolbarScaffoldState()
+    CollapsingToolbarScaffold(
+        modifier = Modifier,
+        state = state,
+        scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
+        toolbar = {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp)
+                    .background(color = MaterialTheme.colorScheme.primary)
+            )
+            Text(
+                stringResource(R.string.mars_photos),
+                style = TextStyle(
+                    fontSize = (18 + (30 - 12) * state.toolbarState.progress).sp
+                ),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .road(whenCollapsed = Alignment.TopStart, whenExpanded = Alignment.BottomStart)
+            )
+        }) {
+        marsPhotosViewModel.marsPhotos.observeAsState().value?.let {
+            RenderData(marsPhotosState = it)
+        }
     }
+
 }
 
 @Composable
