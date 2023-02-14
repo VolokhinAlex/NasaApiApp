@@ -55,6 +55,8 @@ android {
 }
 
 dependencies {
+    implementation "me.saket.swipe:swipe:1.0.0"
+
     // Timber
     implementation 'com.jakewharton.timber:timber:5.0.1'
 

@@ -10,14 +10,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.volokhinaleksey.materialdesign.R
+import me.saket.swipe.SwipeAction
+import me.saket.swipe.SwipeableActionsBox
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchWidget(
     modifier: Modifier = Modifier,
@@ -25,43 +27,51 @@ fun SearchWidget(
     label: String,
     onValueChange: (String) -> Unit,
 ) {
-    val dismissState = rememberDismissState()
-    val isDismissState = dismissState.isDismissed(DismissDirection.EndToStart)
-
-    AnimatedVisibility(
-        visible = isDismissState,
-        enter = slideInHorizontally(
-            initialOffsetX = { fullHeight -> fullHeight },
-            animationSpec = tween(durationMillis = 250, easing = FastOutLinearInEasing)
-        ),
-        exit = slideOutHorizontally(
-            targetOffsetX = { fullHeight -> fullHeight },
-            animationSpec = tween(durationMillis = 250, easing = FastOutLinearInEasing)
-        )
-    ) {
-        SearchField(
-            modifier = modifier,
-            query = query,
-            onValueChange = onValueChange,
-            label = label
-        )
+    var isVisible by remember {
+        mutableStateOf(false)
     }
-    if (!isDismissState) {
-        SwipeToDismiss(
-            state = dismissState,
-            background = {},
-            directions = setOf(DismissDirection.EndToStart),
-            modifier = Modifier,
-            dismissContent = {
-                Icon(
-                    painter = painterResource(id = R.drawable.wikipedia),
-                    tint = MaterialTheme.colorScheme.outline,
-                    contentDescription = "Open Search",
-                    modifier = Modifier
-                        .padding(end = 20.dp, bottom = 10.dp)
+
+    val openAndCloseSearch = SwipeAction(
+        icon = {},
+        background = Color.Unspecified,
+        onSwipe = {
+            isVisible = !isVisible
+        }
+    )
+
+    SwipeableActionsBox(
+        startActions = listOf(openAndCloseSearch),
+        endActions = listOf(openAndCloseSearch),
+        backgroundUntilSwipeThreshold = Color.Unspecified
+    ) {
+        if (!isVisible) {
+            Icon(
+                painter = painterResource(id = R.drawable.wikipedia),
+                tint = MaterialTheme.colorScheme.outline,
+                contentDescription = "Open Search",
+                modifier = Modifier
+                    .padding(end = 20.dp, bottom = 10.dp)
+            )
+        } else {
+            AnimatedVisibility(
+                visible = isVisible,
+                enter = slideInHorizontally(
+                    initialOffsetX = { fullHeight -> fullHeight },
+                    animationSpec = tween(durationMillis = 250, easing = FastOutLinearInEasing)
+                ),
+                exit = slideOutHorizontally(
+                    targetOffsetX = { fullHeight -> fullHeight },
+                    animationSpec = tween(durationMillis = 250, easing = FastOutLinearInEasing)
+                )
+            ) {
+                SearchField(
+                    modifier = modifier,
+                    query = query,
+                    onValueChange = onValueChange,
+                    label = label
                 )
             }
-        )
+        }
     }
 }
 
