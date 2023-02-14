@@ -1,5 +1,6 @@
 package com.volokhinaleksey.materialdesign.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -21,10 +22,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.os.bundleOf
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.volokhinaleksey.materialdesign.R
 import com.volokhinaleksey.materialdesign.states.MarsPhotosState
 import com.volokhinaleksey.materialdesign.ui.images.CoilImageLoader
+import com.volokhinaleksey.materialdesign.ui.navigation.ScreenState
+import com.volokhinaleksey.materialdesign.ui.navigation.navigate
 import com.volokhinaleksey.materialdesign.ui.widgets.ErrorMessage
 import com.volokhinaleksey.materialdesign.ui.widgets.LoadingProgressBar
 import com.volokhinaleksey.materialdesign.viewmodels.MarsPhotosViewModel
@@ -33,7 +38,10 @@ import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
-fun MarsPhotosScreen(marsPhotosViewModel: MarsPhotosViewModel = hiltViewModel()) {
+fun MarsPhotosScreen(
+    marsPhotosViewModel: MarsPhotosViewModel = hiltViewModel(),
+    navController: NavController
+) {
     val state = rememberCollapsingToolbarScaffoldState()
     CollapsingToolbarScaffold(
         modifier = Modifier,
@@ -74,13 +82,13 @@ fun MarsPhotosScreen(marsPhotosViewModel: MarsPhotosViewModel = hiltViewModel())
             }
         }) {
         marsPhotosViewModel.marsPhotos.observeAsState().value?.let {
-            RenderData(marsPhotosState = it)
+            RenderData(marsPhotosState = it, navController = navController)
         }
     }
 }
 
 @Composable
-private fun RenderData(marsPhotosState: MarsPhotosState) {
+private fun RenderData(marsPhotosState: MarsPhotosState, navController: NavController) {
     val imageLoader by remember {
         mutableStateOf(CoilImageLoader())
     }
@@ -104,11 +112,18 @@ private fun RenderData(marsPhotosState: MarsPhotosState) {
             ) {
                 marsPhotosData.photos?.let {
                     itemsIndexed(it) { _, item ->
+                        val subUrl = item.imgSrc?.substring(item.imgSrc.indexOf(":"))
                         Column(
-                            modifier = Modifier.padding(20.dp),
+                            modifier = Modifier
+                                .padding(20.dp)
+                                .clickable {
+                                    navController.navigate(
+                                        route = ScreenState.FullSizeImageScreen.route,
+                                        bundleOf("FullSizeImage" to "https${subUrl}")
+                                    )
+                                },
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            val subUrl = item.imgSrc?.substring(item.imgSrc.indexOf(":"))
                             imageLoader.LoadImage(
                                 modifier = Modifier,
                                 url = "https${subUrl}",
