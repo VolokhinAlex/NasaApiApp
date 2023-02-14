@@ -46,7 +46,12 @@ fun SettingsScreen(themeState: ThemeState) {
                         .fillMaxSize()
                         .padding(20.dp)
                 ) {
-                    Text(text = "Включить темную тему", fontSize = 20.sp)
+                    Text(
+                        text = if (themeState.state) stringResource(R.string.day_mode) else stringResource(
+                            R.string.night_mode
+                        ),
+                        fontSize = 20.sp
+                    )
                     Switch(checked = themeState.state, onCheckedChange = { themeState.state = it })
                 }
             } else {

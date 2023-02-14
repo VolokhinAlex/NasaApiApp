@@ -6,4 +6,7 @@
     <string name="current_version">Current version of the application</string>
     <string name="about_app">The application data is created to receive data from NASA and display them</string>
     <string name="mars_photos">Mars photos</string>
+    <string name="search_in_wiki_label">Search in Wiki</string>
+    <string name="night_mode">Switch to Night Mode</string>
+    <string name="day_mode">Switch to Day Mode</string>
 </resources>

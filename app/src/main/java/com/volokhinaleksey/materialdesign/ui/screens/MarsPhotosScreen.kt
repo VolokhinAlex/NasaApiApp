@@ -1,11 +1,9 @@
 package com.volokhinaleksey.materialdesign.ui.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,6 +12,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -40,8 +43,7 @@ fun MarsPhotosScreen(marsPhotosViewModel: MarsPhotosViewModel = hiltViewModel())
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(150.dp)
-                    .background(color = MaterialTheme.colorScheme.primary)
+                    .height(100.dp)
             )
             Text(
                 stringResource(R.string.mars_photos),
@@ -52,12 +54,29 @@ fun MarsPhotosScreen(marsPhotosViewModel: MarsPhotosViewModel = hiltViewModel())
                     .padding(16.dp)
                     .road(whenCollapsed = Alignment.TopStart, whenExpanded = Alignment.BottomStart)
             )
+        },
+        toolbarModifier = Modifier.drawBehind {
+            val size = size
+
+            val shadowStart = Color.Black.copy(alpha = 0.22f)
+            val shadowEnd = Color.Transparent
+
+            if (state.toolbarState.progress < 1f) {
+                drawRect(
+                    brush = Brush.verticalGradient(
+                        listOf(shadowStart, shadowEnd),
+                        startY = size.height,
+                        endY = size.height + 56f
+                    ),
+                    topLeft = Offset(0f, size.height),
+                    size = Size(size.width, 56f),
+                )
+            }
         }) {
         marsPhotosViewModel.marsPhotos.observeAsState().value?.let {
             RenderData(marsPhotosState = it)
         }
     }
-
 }
 
 @Composable
