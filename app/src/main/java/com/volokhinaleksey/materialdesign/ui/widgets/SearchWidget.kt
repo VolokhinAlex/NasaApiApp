@@ -52,25 +52,24 @@ fun SearchWidget(
                 modifier = Modifier
                     .padding(end = 20.dp, bottom = 10.dp)
             )
-        } else {
-            AnimatedVisibility(
-                visible = isVisible,
-                enter = slideInHorizontally(
-                    initialOffsetX = { fullHeight -> fullHeight },
-                    animationSpec = tween(durationMillis = 250, easing = FastOutLinearInEasing)
-                ),
-                exit = slideOutHorizontally(
-                    targetOffsetX = { fullHeight -> fullHeight },
-                    animationSpec = tween(durationMillis = 250, easing = FastOutLinearInEasing)
-                )
-            ) {
-                SearchField(
-                    modifier = modifier,
-                    query = query,
-                    onValueChange = onValueChange,
-                    label = label
-                )
-            }
+        }
+        AnimatedVisibility(
+            visible = isVisible,
+            enter = slideInHorizontally(
+                initialOffsetX = { fullHeight -> fullHeight },
+                animationSpec = tween(durationMillis = 250, easing = FastOutLinearInEasing)
+            ),
+            exit = slideOutHorizontally(
+                targetOffsetX = { fullHeight -> fullHeight },
+                animationSpec = tween(durationMillis = 250, easing = FastOutLinearInEasing)
+            )
+        ) {
+            SearchField(
+                modifier = modifier,
+                query = query,
+                onValueChange = onValueChange,
+                label = label
+            )
         }
     }
 }
@@ -110,20 +109,14 @@ private fun SearchField(
 @Composable
 fun rememberSearchState(
     query: TextFieldValue = TextFieldValue(""),
-    focused: Boolean = false,
-    searching: Boolean = false,
 ): SearchState {
     return remember {
         SearchState(
             query = query,
-            focused = focused,
-            searching = searching
         )
     }
 }
 
-class SearchState(query: TextFieldValue, searching: Boolean, focused: Boolean) {
+class SearchState(query: TextFieldValue) {
     var query by mutableStateOf(query)
-    var focused by mutableStateOf(focused)
-    var searching by mutableStateOf(searching)
 }
