@@ -194,7 +194,7 @@ private fun RenderData(state: List<TasksEntity>, tasksViewModel: TasksViewModel)
                 colors = CardDefaults.cardColors(
                     containerColor = when (priority) {
                         Priority.Medium -> {
-                            MaterialTheme.colorScheme.inverseSurface
+                            MaterialTheme.colorScheme.secondary
                         }
                         Priority.High -> {
                             MaterialTheme.colorScheme.primary

@@ -24,10 +24,8 @@ interface TasksRepository {
 
 @BoundTo(supertype = TasksRepository::class, component = SingletonComponent::class)
 class TasksRepositoryImpl @Inject constructor(
-    //private val db: NasaApiRoomDatabase
+    private val db: NasaApiRoomDatabase
 ) : TasksRepository {
-
-    private val db: NasaApiRoomDatabase = NasaApiRoomDatabase.getInstance()
 
     override fun getAllTasks(): LiveData<List<TasksEntity>> {
         return db.tasksDao.all()

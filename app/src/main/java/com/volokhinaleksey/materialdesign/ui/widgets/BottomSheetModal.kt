@@ -10,6 +10,7 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.volokhinaleksey.materialdesign.model.NasaDataDTO
@@ -42,6 +43,14 @@ fun BottomSheetModal(
 
 @Composable
 fun SetTextBottomSheet(text: String) {
+    Text(
+        text = text,
+        modifier = Modifier.padding(8.dp),
+        fontSize = 20.sp
+    )
+}
+@Composable
+fun SetTextBottomSheet(text: AnnotatedString) {
     Text(
         text = text,
         modifier = Modifier.padding(8.dp),
