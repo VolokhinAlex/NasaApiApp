@@ -10,6 +10,11 @@ import javax.inject.Inject
 
 interface MarsPhotosRepository {
 
+    /**
+     * Method for executing a request to a remote repository to get mars photos data
+     * @param sol - Martian sol of the Rover's mission
+     */
+
     suspend fun getMarsPhotos(sol: Int): Response<MarsPhotosDTO>
 
 }
@@ -18,6 +23,10 @@ interface MarsPhotosRepository {
 class MarsPhotosRepositoryImpl @Inject constructor(
     private val apiHolder: ApiHolder
 ) : MarsPhotosRepository {
+
+    /**
+     * Method for executing a request to a remote repository to get mars photos data
+     */
 
     @WorkerThread
     override suspend fun getMarsPhotos(sol: Int): Response<MarsPhotosDTO> =

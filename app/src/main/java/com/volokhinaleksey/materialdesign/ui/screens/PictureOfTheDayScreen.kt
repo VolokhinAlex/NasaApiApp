@@ -10,20 +10,19 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.volokhinaleksey.materialdesign.R
-import com.volokhinaleksey.materialdesign.model.NasaDataDTO
+import com.volokhinaleksey.materialdesign.model.PictureOfTheDayDTO
 import com.volokhinaleksey.materialdesign.states.PictureOfTheDayState
-import com.volokhinaleksey.materialdesign.ui.images.CoilImageLoader
 import com.volokhinaleksey.materialdesign.ui.images.ImageLoader
 import com.volokhinaleksey.materialdesign.ui.widgets.*
 import com.volokhinaleksey.materialdesign.viewmodels.PictureViewModel
 
 @Composable
-fun PictureOfTheDayScreen(pictureViewModel: PictureViewModel = hiltViewModel()) {
-    val coilImageLoader by remember {
-        mutableStateOf(CoilImageLoader())
-    }
+fun PictureOfTheDayScreen(
+    pictureViewModel: PictureViewModel = hiltViewModel(),
+    imageLoader: ImageLoader
+) {
     pictureViewModel.pictureOfTheDay.observeAsState().value?.let {
-        RenderData(state = it, imageLoader = coilImageLoader)
+        RenderData(state = it, imageLoader = imageLoader)
     }
 }
 
@@ -77,7 +76,7 @@ private fun RenderData(
 @Composable
 private fun SetImageByChips(
     selectedItem: String,
-    nasaDataDTO: NasaDataDTO,
+    nasaDataDTO: PictureOfTheDayDTO,
     imageLoader: ImageLoader
 ) {
     if (selectedItem.contains("HD")) {

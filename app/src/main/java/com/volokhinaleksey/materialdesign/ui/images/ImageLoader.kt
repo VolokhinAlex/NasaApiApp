@@ -5,6 +5,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.SubcomposeAsyncImage
 import com.volokhinaleksey.materialdesign.ui.widgets.LoadingProgressBar
+import dagger.hilt.components.SingletonComponent
+import it.czerwinski.android.hilt.annotations.BoundTo
+import javax.inject.Inject
 
 interface ImageLoader {
 
@@ -13,7 +16,8 @@ interface ImageLoader {
 
 }
 
-class CoilImageLoader : ImageLoader {
+@BoundTo(supertype = ImageLoader::class, component = SingletonComponent::class)
+class CoilImageLoader @Inject constructor() : ImageLoader {
 
     @Composable
     override fun LoadImage(modifier: Modifier, url: String, contentDescription: String) {

@@ -21,7 +21,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.volokhinaleksey.materialdesign.R
-import com.volokhinaleksey.materialdesign.model.NasaDataDTO
+import com.volokhinaleksey.materialdesign.model.PictureOfTheDayDTO
 import com.volokhinaleksey.materialdesign.ui.theme.montserratFontFamily
 import com.volokhinaleksey.materialdesign.ui.widgets.bottom_sheet_scaffold.BottomSheetScaffold
 import com.volokhinaleksey.materialdesign.ui.widgets.bottom_sheet_scaffold.rememberBottomSheetScaffoldState
@@ -32,7 +32,7 @@ private val SheetCornerShape = 20.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomSheetBehavior(nasaDataDTO: NasaDataDTO) {
+fun BottomSheetBehavior(nasaDataDTO: PictureOfTheDayDTO) {
     val scaffoldState = rememberBottomSheetScaffoldState()
     val copyright = buildAnnotatedString {
         append(stringResource(R.string.copyright))

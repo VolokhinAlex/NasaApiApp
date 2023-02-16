@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.volokhinaleksey.materialdesign.model.TasksEntity
 
+/**
+ * Interface for interacting with a local database
+ */
 
 @Dao
 interface TasksDao {

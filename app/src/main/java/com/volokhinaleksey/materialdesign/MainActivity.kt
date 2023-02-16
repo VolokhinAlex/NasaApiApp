@@ -13,22 +13,26 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.volokhinaleksey.materialdesign.ui.images.ImageLoader
 import com.volokhinaleksey.materialdesign.ui.navigation.ScreenState
 import com.volokhinaleksey.materialdesign.ui.screens.*
 import com.volokhinaleksey.materialdesign.ui.theme.MaterialDesignTheme
 import com.volokhinaleksey.materialdesign.ui.theme_state.ThemeState
 import com.volokhinaleksey.materialdesign.ui.theme_state.rememberThemeState
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var imageLoader: ImageLoader
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +44,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Navigation(
-                        themeState = themeState
+                        themeState = themeState,
+                        imageLoader = imageLoader
                     )
                 }
             }
@@ -52,7 +57,8 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Navigation(
-    themeState: ThemeState
+    themeState: ThemeState,
+    imageLoader: ImageLoader
 ) {
     val navController = rememberAnimatedNavController()
     AppBottomBar(navController = navController) {
@@ -76,7 +82,7 @@ fun Navigation(
                     )
                 )
             }) {
-                PictureOfTheDayScreen()
+                PictureOfTheDayScreen(imageLoader = imageLoader)
             }
             composable(route = ScreenState.SettingsScreen.route, enterTransition = {
                 fadeIn(
@@ -110,7 +116,7 @@ fun Navigation(
                     )
                 )
             }) {
-                MarsPhotosScreen(navController = navController)
+                MarsPhotosScreen(navController = navController, imageLoader = imageLoader)
             }
             composable(route = ScreenState.FullSizeImageScreen.route,
                 enterTransition = {
