@@ -16,17 +16,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.volokhinaleksey.materialdesign.ui.theme.Purple40
 import com.volokhinaleksey.materialdesign.ui.theme.PrimaryDark
+import com.volokhinaleksey.materialdesign.ui.theme.Purple40
 
 @Composable
-fun ChipsWidget(chips: List<String>, onSelected: (String) -> Unit) {
+fun ChipsWidget(chips: List<String>, onSelected: (String) -> Unit, selectedChip: String = "") {
+
     var selected by remember { mutableStateOf("") }
+
     Row(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
+        selected = selectedChip
         chips.forEach { chip ->
             Chip(
                 title = chip,

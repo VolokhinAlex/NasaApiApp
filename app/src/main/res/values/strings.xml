@@ -10,4 +10,8 @@
     <string name="search_in_wiki_label">Search in Wiki</string>
     <string name="night_mode">Switch to Night Mode</string>
     <string name="day_mode">Switch to Day Mode</string>
+    <string name="tasks_screen">Tasks</string>
+    <string name="create_task_btn">Create Task</string>
+    <string name="edit_task_btn">Edit Task</string>
+    <string name="placeholder_search_task">Search task</string>
 </resources>

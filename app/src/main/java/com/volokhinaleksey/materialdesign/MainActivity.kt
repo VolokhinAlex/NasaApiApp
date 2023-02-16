@@ -21,10 +21,7 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.volokhinaleksey.materialdesign.ui.navigation.ScreenState
-import com.volokhinaleksey.materialdesign.ui.screens.FullSizeImage
-import com.volokhinaleksey.materialdesign.ui.screens.MarsPhotosScreen
-import com.volokhinaleksey.materialdesign.ui.screens.PictureOfTheDayScreen
-import com.volokhinaleksey.materialdesign.ui.screens.SettingsScreen
+import com.volokhinaleksey.materialdesign.ui.screens.*
 import com.volokhinaleksey.materialdesign.ui.theme.MaterialDesignTheme
 import com.volokhinaleksey.materialdesign.ui.theme_state.ThemeState
 import com.volokhinaleksey.materialdesign.ui.theme_state.rememberThemeState
@@ -135,6 +132,9 @@ fun Navigation(
                     )
                 }
             }
+            composable(route = ScreenState.TasksScreen.route) {
+                TasksScreen()
+            }
         }
     }
 }
@@ -149,7 +149,8 @@ fun AppBottomBar(
         listOf(
             ScreenState.PictureOfDayScreen,
             ScreenState.SettingsScreen,
-            ScreenState.MarsPhotosScreen
+            ScreenState.MarsPhotosScreen,
+            ScreenState.TasksScreen
         )
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     Scaffold(bottomBar = {
@@ -161,11 +162,6 @@ fun AppBottomBar(
                     NavigationBarItem(
                         selected = selected,
                         onClick = { navController.navigate(item.route) },
-                        label = {
-                            Text(
-                                text = stringResource(id = item.label)
-                            )
-                        },
                         icon = {
                             iconNavItem?.let {
                                 Icon(
