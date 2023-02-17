@@ -1,10 +1,11 @@
-package com.volokhinaleksey.materialdesign.ui.screens
+package com.volokhinaleksey.materialdesign.ui.screens.picture_of_day
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -65,7 +66,7 @@ private fun RenderData(
 
                 ChipsWidget(chips = chipsList, onSelected = {
                     selectedItem = it
-                })
+                }, selectedChip = selectedItem)
 
                 BottomSheetBehavior(nasaDataDTO = nasaDataDTO)
             }
@@ -85,7 +86,8 @@ private fun SetImageByChips(
                 .fillMaxHeight(0.5f)
                 .padding(start = 20.dp, end = 20.dp),
             url = nasaDataDTO.hdurl.orEmpty(),
-            contentDescription = "Image HD of day url"
+            contentDescription = "Image HD of day url",
+            contentScale = ContentScale.Crop
         )
     } else {
         imageLoader.LoadImage(
@@ -93,7 +95,8 @@ private fun SetImageByChips(
                 .fillMaxHeight(0.5f)
                 .padding(start = 20.dp, end = 20.dp),
             url = nasaDataDTO.url.orEmpty(),
-            contentDescription = "Image of day url"
+            contentDescription = "Image of day url",
+            contentScale = ContentScale.Crop
         )
     }
 }

@@ -1,4 +1,4 @@
-package com.volokhinaleksey.materialdesign.ui.screens
+package com.volokhinaleksey.materialdesign.ui.screens.big_image
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.volokhinaleksey.materialdesign.ui.images.CoilImageLoader
@@ -41,7 +42,8 @@ fun FullSizeImage(imageUrl: String, navController: NavController) {
         imageLoader.LoadImage(
             modifier = Modifier.fillMaxSize(),
             url = imageUrl,
-            contentDescription = "image"
+            contentDescription = "image",
+            contentScale = ContentScale.Inside
         )
     }
 

@@ -15,4 +15,5 @@
     <string name="edit_task_btn">Edit Task</string>
     <string name="placeholder_search_task">Search task</string>
     <string name="copyright">Copyright: </string>
+    <string name="splash_screen">SplashScreen</string>
 </resources>

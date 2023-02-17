@@ -1,4 +1,4 @@
-package com.volokhinaleksey.materialdesign.ui.screens
+package com.volokhinaleksey.materialdesign.ui.screens.tasks
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*

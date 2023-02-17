@@ -12,7 +12,12 @@ import javax.inject.Inject
 interface ImageLoader {
 
     @Composable
-    fun LoadImage(modifier: Modifier, url: String, contentDescription: String)
+    fun LoadImage(
+        modifier: Modifier,
+        url: String,
+        contentDescription: String,
+        contentScale: ContentScale
+    )
 
 }
 
@@ -20,13 +25,18 @@ interface ImageLoader {
 class CoilImageLoader @Inject constructor() : ImageLoader {
 
     @Composable
-    override fun LoadImage(modifier: Modifier, url: String, contentDescription: String) {
+    override fun LoadImage(
+        modifier: Modifier,
+        url: String,
+        contentDescription: String,
+        contentScale: ContentScale
+    ) {
         SubcomposeAsyncImage(
             model = url,
             contentDescription = contentDescription,
             loading = { LoadingProgressBar() },
             modifier = modifier,
-            contentScale = ContentScale.Inside
+            contentScale = contentScale
         )
     }
 
