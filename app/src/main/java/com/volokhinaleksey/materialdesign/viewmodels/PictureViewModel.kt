@@ -5,6 +5,7 @@ import com.volokhinaleksey.materialdesign.repository.NasaApiHolder
 import com.volokhinaleksey.materialdesign.repository.PictureRepository
 import com.volokhinaleksey.materialdesign.repository.PictureRepositoryImpl
 import com.volokhinaleksey.materialdesign.states.PictureOfTheDayState
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -21,7 +22,9 @@ class PictureViewModel(private val pictureRepository: PictureRepository) : ViewM
 
     private fun getPictureOfTheDay() {
         _pictureOfTheDay.value = PictureOfTheDayState.Loading
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
+            PictureOfTheDayState.Error(throwable)
+        }) {
             val response = pictureRepository.getPictureOfTheDay()
             val responseData = response.body()
             _pictureOfTheDay.postValue(
