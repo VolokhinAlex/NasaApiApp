@@ -1,6 +1,9 @@
 package com.volokhinaleksey.materialdesign.ui.screens
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
@@ -13,7 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.volokhinaleksey.materialdesign.states.MarsPhotosState
 import com.volokhinaleksey.materialdesign.ui.images.CoilImageLoader
 import com.volokhinaleksey.materialdesign.ui.widgets.ErrorMessage
@@ -21,7 +24,7 @@ import com.volokhinaleksey.materialdesign.ui.widgets.LoadingProgressBar
 import com.volokhinaleksey.materialdesign.viewmodels.MarsPhotosViewModel
 
 @Composable
-fun MarsPhotosScreen(marsPhotosViewModel: MarsPhotosViewModel) {
+fun MarsPhotosScreen(marsPhotosViewModel: MarsPhotosViewModel = hiltViewModel()) {
     marsPhotosViewModel.marsPhotos.observeAsState().value?.let {
         RenderData(marsPhotosState = it)
     }

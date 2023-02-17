@@ -1,15 +1,21 @@
 package com.volokhinaleksey.materialdesign.viewmodels
 
-import androidx.lifecycle.*
-import com.volokhinaleksey.materialdesign.repository.NasaApiHolder
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.volokhinaleksey.materialdesign.repository.PictureRepository
-import com.volokhinaleksey.materialdesign.repository.PictureRepositoryImpl
 import com.volokhinaleksey.materialdesign.states.PictureOfTheDayState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PictureViewModel(private val pictureRepository: PictureRepository) : ViewModel() {
+@HiltViewModel
+class PictureViewModel @Inject constructor(
+    private val pictureRepository: PictureRepository
+) : ViewModel() {
 
     private val _pictureOfTheDay: MutableLiveData<PictureOfTheDayState> =
         MutableLiveData(PictureOfTheDayState.Loading)
@@ -37,16 +43,4 @@ class PictureViewModel(private val pictureRepository: PictureRepository) : ViewM
         }
     }
 
-}
-
-
-@Suppress("UNCHECKED_CAST")
-class PictureViewModelFactory : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass.isAssignableFrom(PictureViewModel::class.java)) {
-            PictureViewModel(pictureRepository = PictureRepositoryImpl(NasaApiHolder)) as T
-        } else {
-            throw IllegalArgumentException("PictureViewModelFactory not found")
-        }
-    }
 }
