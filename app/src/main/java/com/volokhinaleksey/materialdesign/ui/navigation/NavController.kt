@@ -4,6 +4,15 @@ import android.os.Bundle
 import androidx.core.net.toUri
 import androidx.navigation.*
 
+/**
+ * Extensions for the NavController class, for convenient data transfer between screens using bundle
+ * Thanks to this, any parcelable objects can be transferred between screens
+ * @param route - The topmost destination to retain
+ * @param args - Arguments to be passed between screens
+ * @param navOptions - special options for this navigation operation
+ * @param navigatorExtras - extras to pass to the Navigator
+ */
+
 fun NavController.navigate(
     route: String,
     args: Bundle,
