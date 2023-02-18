@@ -1,9 +1,6 @@
 package com.volokhinaleksey.materialdesign.ui.screens
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -44,17 +41,20 @@ private fun RenderData(
         is PictureOfTheDayState.Success -> {
             val nasaDataDTO = state.nasaDataDTO
             Column(
-                modifier = Modifier.padding(top = 20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.padding(top = 20.dp)
             ) {
-
-                SearchWidget(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 20.dp, end = 20.dp, bottom = 10.dp),
-                    query = searchState.query,
-                    label = "Search in Wiki"
-                ) { searchState.query = TextFieldValue(it) }
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
+                    SearchWidget(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 20.dp, end = 20.dp, bottom = 10.dp),
+                        query = searchState.query,
+                        label = "Search in Wiki"
+                    ) { searchState.query = TextFieldValue(it) }
+                }
 
                 SetImageByChips(
                     selectedItem = selectedItem,
