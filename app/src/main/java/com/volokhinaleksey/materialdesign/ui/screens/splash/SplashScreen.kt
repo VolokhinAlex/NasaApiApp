@@ -24,6 +24,11 @@ import com.volokhinaleksey.materialdesign.R
 import com.volokhinaleksey.materialdesign.ui.navigation.ScreenState
 import kotlinx.coroutines.delay
 
+/**
+ * Application Start Screen
+ * @param navController - object for working with navigation
+ */
+
 @Composable
 fun SplashScreen(navController: NavController) {
 

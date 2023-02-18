@@ -28,6 +28,11 @@ import kotlinx.coroutines.launch
 
 private const val DESCRIPTION_MAX_LINES = 4
 
+/**
+ * Task list screen
+ * @param tasksViewModel - Task View Model
+ */
+
 @Composable
 fun TasksScreen(tasksViewModel: TasksViewModel = hiltViewModel()) {
     var openDialog by remember { mutableStateOf(false) }
@@ -70,9 +75,15 @@ fun TasksScreen(tasksViewModel: TasksViewModel = hiltViewModel()) {
     )
 }
 
+/**
+ * A method for processing incoming data from a local database.
+ * @param tasks - The list of tasks.
+ * @param tasksViewModel - View Model for working with tasks
+ */
+
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-private fun RenderData(state: List<TasksEntity>, tasksViewModel: TasksViewModel) {
+private fun RenderData(tasks: List<TasksEntity>, tasksViewModel: TasksViewModel) {
 
     var openDialog by remember { mutableStateOf(false) }
     var rememberItem by remember {
@@ -84,7 +95,7 @@ private fun RenderData(state: List<TasksEntity>, tasksViewModel: TasksViewModel)
 
     LazyColumn {
         stickyHeader {
-            Box {
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
                 SearchBar(
                     query = query,
                     onQueryChange = {
@@ -130,12 +141,13 @@ private fun RenderData(state: List<TasksEntity>, tasksViewModel: TasksViewModel)
                     modifier = Modifier
                         .align(Alignment.TopCenter)
                         .padding(start = 10.dp, end = 10.dp),
-                    content = {}
+                    content = {},
+                    colors = SearchBarDefaults.colors(containerColor = MaterialTheme.colorScheme.onSecondary)
                 )
             }
         }
 
-        itemsIndexed(state) { _, item ->
+        itemsIndexed(tasks) { _, item ->
             val priority = when (item.priority) {
                 Priority.Low.priority -> Priority.Low
                 Priority.Medium.priority -> Priority.Medium
@@ -230,6 +242,11 @@ private fun RenderData(state: List<TasksEntity>, tasksViewModel: TasksViewModel)
     )
 }
 
+/**
+ * Method for checking title and description for emptiness
+ * @param title - Task Title
+ * @param description - Task description
+ */
 
 private fun isDataNotEmpty(title: String, description: String): Boolean {
     return title.isNotEmpty() && description.isNotEmpty()

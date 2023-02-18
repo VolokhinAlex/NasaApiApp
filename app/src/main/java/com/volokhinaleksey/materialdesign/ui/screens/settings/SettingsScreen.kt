@@ -22,6 +22,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
+/**
+ * The main method for the layout of all the methods of the settings screen
+ * @param dataStore - It is needed to save the application settings to the local storage
+ */
+
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SettingsScreen(dataStore: DataStore<Preferences>) {
@@ -54,6 +59,10 @@ fun SettingsScreen(dataStore: DataStore<Preferences>) {
     }
 }
 
+/**
+ * Screen with information about the application
+ */
+
 @Composable
 private fun AboutApp() {
     Column(
@@ -73,6 +82,11 @@ private fun AboutApp() {
         )
     }
 }
+
+/**
+ * Settings Screen Application.
+ * @param dataStore - It is needed to save the application settings to the local storage
+ */
 
 @Composable
 private fun Settings(dataStore: DataStore<Preferences>) {

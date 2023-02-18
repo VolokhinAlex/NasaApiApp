@@ -24,6 +24,7 @@ import androidx.core.os.bundleOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.volokhinaleksey.materialdesign.R
+import com.volokhinaleksey.materialdesign.model.MarsPhotosDTO
 import com.volokhinaleksey.materialdesign.states.MarsPhotosState
 import com.volokhinaleksey.materialdesign.ui.images.ImageLoader
 import com.volokhinaleksey.materialdesign.ui.navigation.ScreenState
@@ -34,6 +35,13 @@ import com.volokhinaleksey.materialdesign.viewmodels.MarsPhotosViewModel
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
+
+/**
+ * The main method for the layout of all the methods of mars photos screen
+ * @param marsPhotosViewModel - Mars Photos View Model to work with Repository
+ * @param navController - Needed to navigate between screens
+ * @param imageLoader - It's need to load mars images
+ */
 
 @Composable
 fun MarsPhotosScreen(
@@ -90,6 +98,13 @@ fun MarsPhotosScreen(
     }
 }
 
+/**
+ * A class for handling states coming from the repository
+ * @param marsPhotosState - Mars photos state
+ * @param navController - Needed to navigate between screens
+ * @param imageLoader - It's need to load mars images
+ */
+
 @Composable
 private fun RenderData(
     marsPhotosState: MarsPhotosState,
@@ -108,43 +123,63 @@ private fun RenderData(
         MarsPhotosState.Loading -> LoadingProgressBar()
         is MarsPhotosState.Success -> {
             val marsPhotosData = marsPhotosState.nasaDataDTO
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                marsPhotosData.photos?.let {
-                    itemsIndexed(it) { _, item ->
-                        val subUrl = item.imgSrc?.substring(item.imgSrc.indexOf(":"))
-                        Column(
-                            modifier = Modifier
-                                .padding(20.dp)
-                                .clickable {
-                                    navController.navigate(
-                                        route = ScreenState.FullSizeImageScreen.route,
-                                        bundleOf("FullSizeImage" to "https${subUrl}")
-                                    )
-                                },
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            imageLoader.LoadImage(
-                                modifier = Modifier,
-                                url = "https${subUrl}",
-                                contentDescription = "Mars Photo",
-                                contentScale = ContentScale.Inside
+            MarsPhotosList(
+                marsPhotosData = marsPhotosData,
+                navController = navController,
+                imageLoader = imageLoader
+            )
+        }
+    }
+}
+
+/**
+ * List of photos of Mars
+ * @param marsPhotosData - The data class with information about Mars
+ * @param navController - Needed to navigate between screens
+ * @param imageLoader - It's need to load mars images
+ */
+
+@Composable
+private fun MarsPhotosList(
+    marsPhotosData: MarsPhotosDTO,
+    navController: NavController,
+    imageLoader: ImageLoader
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        modifier = Modifier.fillMaxSize(),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        marsPhotosData.photos?.let {
+            itemsIndexed(it) { _, item ->
+                val subUrl = item.imgSrc?.substring(item.imgSrc.indexOf(":"))
+                Column(
+                    modifier = Modifier
+                        .padding(20.dp)
+                        .clickable {
+                            navController.navigate(
+                                route = ScreenState.FullSizeImageScreen.route,
+                                bundleOf("FullSizeImage" to "https${subUrl}")
                             )
-                            Column {
-                                Text(
-                                    text = "Camera: ${item.camera?.name}",
-                                    modifier = Modifier.padding(top = 10.dp)
-                                )
-                                Text(
-                                    text = "EarthDate: ${item.earthDate}",
-                                    modifier = Modifier.padding(top = 10.dp)
-                                )
-                            }
-                        }
+                        },
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    imageLoader.LoadImage(
+                        modifier = Modifier,
+                        url = "https${subUrl}",
+                        contentDescription = "Mars Photo",
+                        contentScale = ContentScale.Inside
+                    )
+                    Column {
+                        Text(
+                            text = "Camera: ${item.camera?.name}",
+                            modifier = Modifier.padding(top = 10.dp)
+                        )
+                        Text(
+                            text = "EarthDate: ${item.earthDate}",
+                            modifier = Modifier.padding(top = 10.dp)
+                        )
                     }
                 }
             }
