@@ -5,15 +5,18 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.volokhinaleksey.materialdesign.R
 import com.volokhinaleksey.materialdesign.model.NasaDataDTO
 import com.volokhinaleksey.materialdesign.states.PictureOfTheDayState
 import com.volokhinaleksey.materialdesign.ui.images.CoilImageLoader
 import com.volokhinaleksey.materialdesign.ui.images.ImageLoader
 import com.volokhinaleksey.materialdesign.ui.widgets.*
 import com.volokhinaleksey.materialdesign.viewmodels.PictureViewModel
+import javax.inject.Inject
 
 @Composable
 fun PictureOfTheDayScreen(pictureViewModel: PictureViewModel = hiltViewModel()) {
@@ -52,7 +55,7 @@ private fun RenderData(
                             .fillMaxWidth()
                             .padding(start = 20.dp, end = 20.dp, bottom = 10.dp),
                         query = searchState.query,
-                        label = "Search in Wiki"
+                        label = stringResource(R.string.search_in_wiki_label)
                     ) { searchState.query = TextFieldValue(it) }
                 }
 

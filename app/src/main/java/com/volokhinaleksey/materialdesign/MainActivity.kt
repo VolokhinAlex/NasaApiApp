@@ -3,6 +3,8 @@ package com.volokhinaleksey.materialdesign
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.*
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,11 +16,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.volokhinaleksey.materialdesign.ui.navigation.ScreenState
+import com.volokhinaleksey.materialdesign.ui.screens.FullSizeImage
 import com.volokhinaleksey.materialdesign.ui.screens.MarsPhotosScreen
 import com.volokhinaleksey.materialdesign.ui.screens.PictureOfTheDayScreen
 import com.volokhinaleksey.materialdesign.ui.screens.SettingsScreen
@@ -49,25 +52,88 @@ class MainActivity : ComponentActivity() {
 
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Navigation(
     themeState: ThemeState
 ) {
-    val navController = rememberNavController()
+    val navController = rememberAnimatedNavController()
     AppBottomBar(navController = navController) {
-        NavHost(
+        AnimatedNavHost(
             navController = navController,
             startDestination = ScreenState.PictureOfDayScreen.route,
             modifier = Modifier.padding(it)
         ) {
-            composable(route = ScreenState.PictureOfDayScreen.route) {
+            composable(route = ScreenState.PictureOfDayScreen.route, enterTransition = {
+                fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 500,
+                        easing = FastOutSlowInEasing
+                    )
+                )
+            }, exitTransition = {
+                fadeOut(
+                    animationSpec = tween(
+                        durationMillis = 500,
+                        easing = FastOutSlowInEasing
+                    )
+                )
+            }) {
                 PictureOfTheDayScreen()
             }
-            composable(route = ScreenState.SettingsScreen.route) {
+            composable(route = ScreenState.SettingsScreen.route, enterTransition = {
+                fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 500,
+                        easing = FastOutSlowInEasing
+                    )
+                )
+            }, exitTransition = {
+                fadeOut(
+                    animationSpec = tween(
+                        durationMillis = 500,
+                        easing = FastOutSlowInEasing
+                    )
+                )
+            }) {
                 SettingsScreen(themeState = themeState)
             }
-            composable(route = ScreenState.MarsPhotosScreen.route) {
-                MarsPhotosScreen()
+            composable(route = ScreenState.MarsPhotosScreen.route, enterTransition = {
+                fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 500,
+                        easing = FastOutSlowInEasing
+                    )
+                )
+            }, exitTransition = {
+                fadeOut(
+                    animationSpec = tween(
+                        durationMillis = 500,
+                        easing = FastOutSlowInEasing
+                    )
+                )
+            }) {
+                MarsPhotosScreen(navController = navController)
+            }
+            composable(route = ScreenState.FullSizeImageScreen.route,
+                enterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentScope.SlideDirection.Start,
+                        animationSpec = tween(700)
+                    )
+                }, exitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentScope.SlideDirection.End,
+                        animationSpec = tween(700)
+                    )
+                }) { content ->
+                val imageUrl = content.arguments?.getString("FullSizeImage")
+                imageUrl?.let { url ->
+                    FullSizeImage(
+                        imageUrl = url,
+                        navController = navController
+                    )
+                }
             }
         }
     }
@@ -87,25 +153,29 @@ fun AppBottomBar(
         )
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     Scaffold(bottomBar = {
-        NavigationBar(containerColor = MaterialTheme.colorScheme.onSecondary) {
-            bottomNavItems.forEach { item ->
-                val selected = item.route == currentRoute
-                val iconNavItem = ImageVector.vectorResource(id = item.icon)
-                NavigationBarItem(
-                    selected = selected,
-                    onClick = { navController.navigate(item.route) },
-                    label = {
-                        Text(
-                            text = stringResource(id = item.label)
-                        )
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = iconNavItem,
-                            contentDescription = iconNavItem.name
-                        )
-                    }
-                )
+        if (currentRoute != ScreenState.FullSizeImageScreen.route) {
+            NavigationBar(containerColor = MaterialTheme.colorScheme.onSecondary) {
+                bottomNavItems.forEach { item ->
+                    val selected = item.route == currentRoute
+                    val iconNavItem = item.icon?.let { ImageVector.vectorResource(id = it) }
+                    NavigationBarItem(
+                        selected = selected,
+                        onClick = { navController.navigate(item.route) },
+                        label = {
+                            Text(
+                                text = stringResource(id = item.label)
+                            )
+                        },
+                        icon = {
+                            iconNavItem?.let {
+                                Icon(
+                                    imageVector = it,
+                                    contentDescription = iconNavItem.name
+                                )
+                            }
+                        }
+                    )
+                }
             }
         }
     }, content = content)

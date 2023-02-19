@@ -22,7 +22,7 @@ class CoilImageLoader : ImageLoader {
             contentDescription = contentDescription,
             loading = { LoadingProgressBar() },
             modifier = modifier,
-            contentScale = ContentScale.FillBounds
+            contentScale = ContentScale.Inside
         )
     }
 
