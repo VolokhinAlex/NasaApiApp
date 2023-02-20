@@ -4,7 +4,11 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.volokhinaleksey.materialdesign.R
 
-sealed class ScreenState(val route: String, @StringRes val label: Int, @DrawableRes val icon: Int?) {
+sealed class ScreenState(
+    val route: String,
+    @StringRes val label: Int,
+    @DrawableRes val icon: Int?
+) {
     object PictureOfDayScreen : ScreenState(
         route = "picture_of_day_screen",
         label = R.string.picture_of_day_screen,
@@ -23,9 +27,15 @@ sealed class ScreenState(val route: String, @StringRes val label: Int, @Drawable
         icon = R.drawable.ic_mars
     )
 
-    object FullSizeImageScreen: ScreenState(
+    object FullSizeImageScreen : ScreenState(
         route = "full_size_image_screen",
         label = R.string.full_size_image_screen,
         icon = null
+    )
+
+    object TasksScreen : ScreenState(
+        route = "tasks_screen",
+        label = R.string.tasks_screen,
+        icon = R.drawable.baseline_edit_note_24
     )
 }

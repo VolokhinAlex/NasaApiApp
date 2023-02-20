@@ -16,7 +16,6 @@ import com.volokhinaleksey.materialdesign.ui.images.CoilImageLoader
 import com.volokhinaleksey.materialdesign.ui.images.ImageLoader
 import com.volokhinaleksey.materialdesign.ui.widgets.*
 import com.volokhinaleksey.materialdesign.viewmodels.PictureViewModel
-import javax.inject.Inject
 
 @Composable
 fun PictureOfTheDayScreen(pictureViewModel: PictureViewModel = hiltViewModel()) {
@@ -65,9 +64,9 @@ private fun RenderData(
                     imageLoader = imageLoader
                 )
 
-                ChipsWidget(chips = chipsList) {
+                ChipsWidget(chips = chipsList, onSelected = {
                     selectedItem = it
-                }
+                })
 
                 BottomSheetBehavior(nasaDataDTO = nasaDataDTO)
             }
