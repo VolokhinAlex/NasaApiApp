@@ -79,6 +79,10 @@ class MainActivity : ComponentActivity() {
 
 }
 
+/**
+ * Method for setting up navigation between screens
+ */
+
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Navigation(
@@ -181,6 +185,10 @@ fun Navigation(
         }
     }
 }
+
+/**
+ * The method creates a navigation bar at the bottom of the screen.
+ */
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

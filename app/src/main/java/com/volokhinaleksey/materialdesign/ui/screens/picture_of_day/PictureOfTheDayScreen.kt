@@ -39,14 +39,12 @@ fun PictureOfTheDayScreen(
  * A class for processing states coming from the View Model
  * @param state - The state that came from the repository
  * @param imageLoader - Needed for downloading and displaying image
- * @param searchState - Search State
  */
 
 @Composable
 private fun RenderData(
     state: PictureOfTheDayState,
-    imageLoader: ImageLoader,
-    searchState: SearchState = rememberSearchState()
+    imageLoader: ImageLoader
 ) {
     val chipsList = listOf("Image HD", "Image")
     var selectedChip by remember { mutableStateOf("") }
@@ -58,18 +56,7 @@ private fun RenderData(
             Column(
                 modifier = Modifier.padding(top = 20.dp)
             ) {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.CenterEnd
-                ) {
-                    SearchWidget(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 20.dp, end = 20.dp, bottom = 10.dp),
-                        query = searchState.query,
-                        label = stringResource(R.string.search_in_wiki_label)
-                    ) { searchState.query = TextFieldValue(it) }
-                }
+                TopBar()
 
                 SetImageByChips(
                     selectedItem = selectedChip,
@@ -130,5 +117,26 @@ private fun SetImageByChips(
             contentDescription = "Image of day url",
             contentScale = ContentScale.Crop
         )
+    }
+}
+
+/**
+ * The method adds a top bar to the picture of the day screen
+ * @param searchState - Search State
+ */
+
+@Composable
+private fun TopBar(searchState: SearchState = rememberSearchState()) {
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.CenterEnd
+    ) {
+        SearchWidget(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 20.dp, end = 20.dp, bottom = 10.dp),
+            query = searchState.query,
+            label = stringResource(R.string.search_in_wiki_label)
+        ) { searchState.query = TextFieldValue(it) }
     }
 }

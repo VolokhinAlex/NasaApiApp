@@ -30,6 +30,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SettingsScreen(dataStore: DataStore<Preferences>) {
+
     val pagerState = rememberPagerState()
     val tabItems = listOf("Settings", "About App")
     val coroutineScope = rememberCoroutineScope()
@@ -57,6 +58,7 @@ fun SettingsScreen(dataStore: DataStore<Preferences>) {
             }
         }
     }
+
 }
 
 /**
@@ -126,4 +128,5 @@ private fun Settings(dataStore: DataStore<Preferences>) {
             }
         })
     }
+
 }

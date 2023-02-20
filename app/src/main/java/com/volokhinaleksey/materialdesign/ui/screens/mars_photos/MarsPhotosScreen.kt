@@ -25,6 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.volokhinaleksey.materialdesign.R
 import com.volokhinaleksey.materialdesign.model.MarsPhotosDTO
+import com.volokhinaleksey.materialdesign.model.PhotoDTO
 import com.volokhinaleksey.materialdesign.states.MarsPhotosState
 import com.volokhinaleksey.materialdesign.ui.images.ImageLoader
 import com.volokhinaleksey.materialdesign.ui.navigation.ScreenState
@@ -49,45 +50,7 @@ fun MarsPhotosScreen(
     navController: NavController,
     imageLoader: ImageLoader
 ) {
-    val state = rememberCollapsingToolbarScaffoldState()
-    CollapsingToolbarScaffold(
-        modifier = Modifier,
-        state = state,
-        scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
-        toolbar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp)
-            )
-            Text(
-                stringResource(R.string.mars_photos),
-                style = TextStyle(
-                    fontSize = (18 + (30 - 12) * state.toolbarState.progress).sp
-                ),
-                modifier = Modifier
-                    .padding(16.dp)
-                    .road(whenCollapsed = Alignment.TopStart, whenExpanded = Alignment.BottomStart)
-            )
-        },
-        toolbarModifier = Modifier.drawBehind {
-            val size = size
-
-            val shadowStart = Color.Black.copy(alpha = 0.22f)
-            val shadowEnd = Color.Transparent
-
-            if (state.toolbarState.progress < 1f) {
-                drawRect(
-                    brush = Brush.verticalGradient(
-                        listOf(shadowStart, shadowEnd),
-                        startY = size.height,
-                        endY = size.height + 56f
-                    ),
-                    topLeft = Offset(0f, size.height),
-                    size = Size(size.width, 56f),
-                )
-            }
-        }) {
+    CollapsingToolBar {
         marsPhotosViewModel.marsPhotos.observeAsState().value?.let {
             RenderData(
                 marsPhotosState = it,
@@ -153,36 +116,105 @@ private fun MarsPhotosList(
     ) {
         marsPhotosData.photos?.let {
             itemsIndexed(it) { _, item ->
-                val subUrl = item.imgSrc?.substring(item.imgSrc.indexOf(":"))
-                Column(
-                    modifier = Modifier
-                        .padding(20.dp)
-                        .clickable {
-                            navController.navigate(
-                                route = ScreenState.FullSizeImageScreen.route,
-                                bundleOf("FullSizeImage" to "https${subUrl}")
-                            )
-                        },
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    imageLoader.LoadImage(
-                        modifier = Modifier,
-                        url = "https${subUrl}",
-                        contentDescription = "Mars Photo",
-                        contentScale = ContentScale.Inside
+                MarsCardItem(photoDTO = item, imageLoader = imageLoader) { url ->
+                    navController.navigate(
+                        route = ScreenState.FullSizeImageScreen.route,
+                        bundleOf("FullSizeImage" to url)
                     )
-                    Column {
-                        Text(
-                            text = "Camera: ${item.camera?.name}",
-                            modifier = Modifier.padding(top = 10.dp)
-                        )
-                        Text(
-                            text = "EarthDate: ${item.earthDate}",
-                            modifier = Modifier.padding(top = 10.dp)
-                        )
-                    }
                 }
             }
+        }
+    }
+}
+
+/**
+ * The method adds a collapsing tool bar to screen
+ * @param content - Content under the tool bar
+ */
+
+@Composable
+private fun CollapsingToolBar(content: @Composable () -> Unit) {
+    val state = rememberCollapsingToolbarScaffoldState()
+    CollapsingToolbarScaffold(
+        modifier = Modifier,
+        state = state,
+        scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
+        toolbar = {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+            )
+            Text(
+                stringResource(R.string.mars_photos),
+                style = TextStyle(
+                    fontSize = (18 + (30 - 12) * state.toolbarState.progress).sp
+                ),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .road(whenCollapsed = Alignment.TopStart, whenExpanded = Alignment.BottomStart)
+            )
+        },
+        toolbarModifier = Modifier.drawBehind {
+            val size = size
+
+            val shadowStart = Color.Black.copy(alpha = 0.22f)
+            val shadowEnd = Color.Transparent
+
+            if (state.toolbarState.progress < 1f) {
+                drawRect(
+                    brush = Brush.verticalGradient(
+                        listOf(shadowStart, shadowEnd),
+                        startY = size.height,
+                        endY = size.height + 56f
+                    ),
+                    topLeft = Offset(0f, size.height),
+                    size = Size(size.width, 56f),
+                )
+            }
+        }
+    ) {
+        content()
+    }
+}
+
+/**
+ * A card for an item in the list of photos of Mars.
+ * @param photoDTO - A mars data.
+ * @param imageLoader - It's need to load mars images
+ * @param onClick - Event when clicking on the card
+ */
+
+@Composable
+private fun MarsCardItem(
+    photoDTO: PhotoDTO,
+    imageLoader: ImageLoader,
+    onClick: (String) -> Unit
+) {
+    val subUrl = photoDTO.imgSrc?.substring(photoDTO.imgSrc.indexOf(":"))
+    Column(
+        modifier = Modifier
+            .padding(20.dp)
+            .clickable {
+                onClick("https${subUrl}")
+            },
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        imageLoader.LoadImage(
+            modifier = Modifier,
+            url = "https${subUrl}",
+            contentDescription = "Mars Photo",
+            contentScale = ContentScale.Inside
+        )
+        Column {
+            Text(
+                text = "${stringResource(R.string.camera_label)}: ${photoDTO.camera?.name}",
+                modifier = Modifier.padding(top = 10.dp)
+            )
+            Text(
+                text = "${stringResource(R.string.earth_date_label)}: ${photoDTO.earthDate}",
+                modifier = Modifier.padding(top = 10.dp)
+            )
         }
     }
 }

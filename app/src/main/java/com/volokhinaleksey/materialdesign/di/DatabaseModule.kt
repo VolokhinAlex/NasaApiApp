@@ -10,9 +10,18 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+/**
+ * A module for providing a dependency for a database
+ */
+
 @Module
 @InstallIn(SingletonComponent::class)
 class DatabaseModule {
+
+    /**
+     * The method provides a database dependency
+     * @param appContext - Application context
+     */
 
     @Provides
     @Singleton

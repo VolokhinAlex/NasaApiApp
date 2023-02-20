@@ -26,6 +26,7 @@ class MarsPhotosRepositoryImpl @Inject constructor(
 
     /**
      * Method for executing a request to a remote repository to get mars photos data
+     * @param sol - Martian sol of the Rover's mission
      */
 
     @WorkerThread

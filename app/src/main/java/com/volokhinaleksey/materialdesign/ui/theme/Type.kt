@@ -8,6 +8,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.volokhinaleksey.materialdesign.R
 
+/**
+ * A personal font added to the application resources.
+ */
+
 val montserratFontFamily = FontFamily(Font(R.font.montserrat))
 
 val Typography = Typography(

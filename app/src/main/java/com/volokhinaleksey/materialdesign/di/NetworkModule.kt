@@ -15,13 +15,25 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
 import javax.inject.Singleton
 
+/**
+ * A module for providing a dependency for working with the network
+ */
+
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
 
+    /**
+     * Method for providing the main link for requests via retrofit
+     */
+
     @Provides
     @Named("baseUrl")
     fun baseUrl(): String = "https://api.nasa.gov/"
+
+    /**
+     * The method provides a dependency for the OkHttpClient which is needed to enable interceptors
+     */
 
     @Singleton
     @Provides
@@ -30,9 +42,17 @@ class NetworkModule {
             .addInterceptor(httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY))
             .build()
 
+    /**
+     * The method represents a dependency for logging requests to the network
+     */
+
     @Singleton
     @Provides
     fun loggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor()
+
+    /**
+     * The method represents a dependency for the converter of objects from JSON to data classes
+     */
 
     @Singleton
     @Provides
@@ -40,6 +60,13 @@ class NetworkModule {
         .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
         .excludeFieldsWithoutExposeAnnotation()
         .create()
+
+    /**
+     * A method for providing a service dependency for retrofit
+     * @param baseUrl - the main url for going online
+     * @param gson - Converter of elements from json to data classes
+     * @param client - OkHttpClient
+     */
 
     @Singleton
     @Provides

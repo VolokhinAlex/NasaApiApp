@@ -18,9 +18,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
 
+/**
+ * A module for providing a dependency for a DataStore
+ */
+
 @InstallIn(SingletonComponent::class)
 @Module
 class DataStoreModule {
+
+    /**
+     * The method provides a DataStore dependency
+     * @param appContext - Application context
+     */
 
     @Provides
     @Singleton
@@ -30,7 +39,7 @@ class DataStoreModule {
         ),
             migrations = listOf(SharedPreferencesMigration(appContext, NASA_API_PREFERENCES)),
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
-            produceFile = { appContext.preferencesDataStoreFile(NASA_API_PREFERENCES) }
+            produceFile = { appContext.preferencesDataStoreFile(name = NASA_API_PREFERENCES) }
         )
 
     companion object {
