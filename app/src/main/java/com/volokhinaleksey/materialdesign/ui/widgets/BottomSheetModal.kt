@@ -13,14 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.volokhinaleksey.materialdesign.model.NasaDataDTO
+import com.volokhinaleksey.materialdesign.model.PictureOfTheDayDTO
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheetModal(
     onDismissRequest: () -> Unit,
     sheetState: SheetState,
-    nasaDataDTO: NasaDataDTO
+    nasaDataDTO: PictureOfTheDayDTO
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,

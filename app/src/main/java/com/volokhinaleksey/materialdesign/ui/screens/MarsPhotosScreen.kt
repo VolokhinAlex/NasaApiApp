@@ -7,10 +7,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -27,7 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.volokhinaleksey.materialdesign.R
 import com.volokhinaleksey.materialdesign.states.MarsPhotosState
-import com.volokhinaleksey.materialdesign.ui.images.CoilImageLoader
+import com.volokhinaleksey.materialdesign.ui.images.ImageLoader
 import com.volokhinaleksey.materialdesign.ui.navigation.ScreenState
 import com.volokhinaleksey.materialdesign.ui.navigation.navigate
 import com.volokhinaleksey.materialdesign.ui.widgets.ErrorMessage
@@ -40,7 +37,8 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 @Composable
 fun MarsPhotosScreen(
     marsPhotosViewModel: MarsPhotosViewModel = hiltViewModel(),
-    navController: NavController
+    navController: NavController,
+    imageLoader: ImageLoader
 ) {
     val state = rememberCollapsingToolbarScaffoldState()
     CollapsingToolbarScaffold(
@@ -82,16 +80,21 @@ fun MarsPhotosScreen(
             }
         }) {
         marsPhotosViewModel.marsPhotos.observeAsState().value?.let {
-            RenderData(marsPhotosState = it, navController = navController)
+            RenderData(
+                marsPhotosState = it,
+                navController = navController,
+                imageLoader = imageLoader
+            )
         }
     }
 }
 
 @Composable
-private fun RenderData(marsPhotosState: MarsPhotosState, navController: NavController) {
-    val imageLoader by remember {
-        mutableStateOf(CoilImageLoader())
-    }
+private fun RenderData(
+    marsPhotosState: MarsPhotosState,
+    navController: NavController,
+    imageLoader: ImageLoader
+) {
     when (marsPhotosState) {
         is MarsPhotosState.Error -> {
             val errorMessage = marsPhotosState.message
