@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -22,6 +23,12 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.volokhinaleksey.materialdesign.ui.images.ImageLoader
 import com.volokhinaleksey.materialdesign.ui.navigation.ScreenState
 import com.volokhinaleksey.materialdesign.ui.screens.*
+import com.volokhinaleksey.materialdesign.ui.screens.big_image.FullSizeImage
+import com.volokhinaleksey.materialdesign.ui.screens.mars_photos.MarsPhotosScreen
+import com.volokhinaleksey.materialdesign.ui.screens.picture_of_day.PictureOfTheDayScreen
+import com.volokhinaleksey.materialdesign.ui.screens.settings.SettingsScreen
+import com.volokhinaleksey.materialdesign.ui.screens.splash.SplashScreen
+import com.volokhinaleksey.materialdesign.ui.screens.tasks.TasksScreen
 import com.volokhinaleksey.materialdesign.ui.theme.MaterialDesignTheme
 import com.volokhinaleksey.materialdesign.ui.theme_state.ThemeState
 import com.volokhinaleksey.materialdesign.ui.theme_state.rememberThemeState
@@ -38,7 +45,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val themeState = rememberThemeState()
-            MaterialDesignTheme(darkTheme = themeState.state) {
+            MaterialDesignTheme(darkTheme = if(isSystemInDarkTheme()) true else themeState.state) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -64,7 +71,7 @@ fun Navigation(
     AppBottomBar(navController = navController) {
         AnimatedNavHost(
             navController = navController,
-            startDestination = ScreenState.PictureOfDayScreen.route,
+            startDestination = ScreenState.SplashScreen.route,
             modifier = Modifier.padding(it)
         ) {
             composable(route = ScreenState.PictureOfDayScreen.route, enterTransition = {
@@ -141,6 +148,9 @@ fun Navigation(
             composable(route = ScreenState.TasksScreen.route) {
                 TasksScreen()
             }
+            composable(route = ScreenState.SplashScreen.route) {
+                SplashScreen(navController = navController)
+            }
         }
     }
 }
@@ -160,7 +170,8 @@ fun AppBottomBar(
         )
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     Scaffold(bottomBar = {
-        if (currentRoute != ScreenState.FullSizeImageScreen.route) {
+        if (currentRoute != ScreenState.SplashScreen.route &&
+            currentRoute != ScreenState.FullSizeImageScreen.route) {
             NavigationBar(containerColor = MaterialTheme.colorScheme.onSecondary) {
                 bottomNavItems.forEach { item ->
                     val selected = item.route == currentRoute

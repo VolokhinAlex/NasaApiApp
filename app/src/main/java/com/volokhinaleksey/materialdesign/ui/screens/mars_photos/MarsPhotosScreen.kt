@@ -1,4 +1,4 @@
-package com.volokhinaleksey.materialdesign.ui.screens
+package com.volokhinaleksey.materialdesign.ui.screens.mars_photos
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,6 +15,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -130,7 +131,8 @@ private fun RenderData(
                             imageLoader.LoadImage(
                                 modifier = Modifier,
                                 url = "https${subUrl}",
-                                contentDescription = "Mars Photo"
+                                contentDescription = "Mars Photo",
+                                contentScale = ContentScale.Inside
                             )
                             Column {
                                 Text(

@@ -1,4 +1,4 @@
-package com.volokhinaleksey.materialdesign.ui.screens
+package com.volokhinaleksey.materialdesign.ui.screens.settings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

@@ -38,4 +38,10 @@ sealed class ScreenState(
         label = R.string.tasks_screen,
         icon = R.drawable.baseline_edit_note_24
     )
+
+    object SplashScreen : ScreenState(
+        route = "splash_screen",
+        label = R.string.splash_screen,
+        icon = null
+    )
 }
