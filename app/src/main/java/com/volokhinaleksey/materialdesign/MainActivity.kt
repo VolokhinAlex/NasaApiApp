@@ -15,6 +15,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -30,10 +33,12 @@ import com.volokhinaleksey.materialdesign.ui.screens.settings.SettingsScreen
 import com.volokhinaleksey.materialdesign.ui.screens.splash.SplashScreen
 import com.volokhinaleksey.materialdesign.ui.screens.tasks.TasksScreen
 import com.volokhinaleksey.materialdesign.ui.theme.MaterialDesignTheme
-import com.volokhinaleksey.materialdesign.ui.theme_state.ThemeState
-import com.volokhinaleksey.materialdesign.ui.theme_state.rememberThemeState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+
+val modeThemeState = booleanPreferencesKey("mode_theme_state")
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -41,21 +46,34 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var imageLoader: ImageLoader
 
+    @Inject
+    lateinit var dataStorePreferences: DataStore<Preferences>
+
+    private val getThemeMode: Flow<Boolean> by lazy {
+        dataStorePreferences.data
+            .map { preferences ->
+                preferences[modeThemeState] ?: false
+            }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val themeState = rememberThemeState()
-            MaterialDesignTheme(darkTheme = if(isSystemInDarkTheme()) true else themeState.state) {
+
+            val isDarkMode by getThemeMode.collectAsState(initial = false)
+
+            MaterialDesignTheme(darkTheme = if (isSystemInDarkTheme()) true else isDarkMode) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Navigation(
-                        themeState = themeState,
-                        imageLoader = imageLoader
+                        imageLoader = imageLoader,
+                        dataStorePreferences = dataStorePreferences
                     )
                 }
             }
+
         }
     }
 
@@ -64,16 +82,19 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Navigation(
-    themeState: ThemeState,
-    imageLoader: ImageLoader
+    imageLoader: ImageLoader,
+    dataStorePreferences: DataStore<Preferences>
 ) {
+
     val navController = rememberAnimatedNavController()
+
     AppBottomBar(navController = navController) {
         AnimatedNavHost(
             navController = navController,
             startDestination = ScreenState.SplashScreen.route,
             modifier = Modifier.padding(it)
         ) {
+
             composable(route = ScreenState.PictureOfDayScreen.route, enterTransition = {
                 fadeIn(
                     animationSpec = tween(
@@ -91,6 +112,7 @@ fun Navigation(
             }) {
                 PictureOfTheDayScreen(imageLoader = imageLoader)
             }
+
             composable(route = ScreenState.SettingsScreen.route, enterTransition = {
                 fadeIn(
                     animationSpec = tween(
@@ -106,8 +128,9 @@ fun Navigation(
                     )
                 )
             }) {
-                SettingsScreen(themeState = themeState)
+                SettingsScreen(dataStore = dataStorePreferences)
             }
+
             composable(route = ScreenState.MarsPhotosScreen.route, enterTransition = {
                 fadeIn(
                     animationSpec = tween(
@@ -125,6 +148,7 @@ fun Navigation(
             }) {
                 MarsPhotosScreen(navController = navController, imageLoader = imageLoader)
             }
+
             composable(route = ScreenState.FullSizeImageScreen.route,
                 enterTransition = {
                     slideIntoContainer(
@@ -145,12 +169,15 @@ fun Navigation(
                     )
                 }
             }
+
             composable(route = ScreenState.TasksScreen.route) {
                 TasksScreen()
             }
+
             composable(route = ScreenState.SplashScreen.route) {
                 SplashScreen(navController = navController)
             }
+
         }
     }
 }
@@ -161,6 +188,7 @@ fun AppBottomBar(
     navController: NavController,
     content: @Composable (PaddingValues) -> Unit
 ) {
+
     val bottomNavItems =
         listOf(
             ScreenState.PictureOfDayScreen,
@@ -168,10 +196,13 @@ fun AppBottomBar(
             ScreenState.MarsPhotosScreen,
             ScreenState.TasksScreen
         )
+
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+
     Scaffold(bottomBar = {
         if (currentRoute != ScreenState.SplashScreen.route &&
-            currentRoute != ScreenState.FullSizeImageScreen.route) {
+            currentRoute != ScreenState.FullSizeImageScreen.route
+        ) {
             NavigationBar(containerColor = MaterialTheme.colorScheme.onSecondary) {
                 bottomNavItems.forEach { item ->
                     val selected = item.route == currentRoute
@@ -192,6 +223,7 @@ fun AppBottomBar(
             }
         }
     }, content = content)
+
 }
 
 

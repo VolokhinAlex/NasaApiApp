@@ -11,6 +11,15 @@ import javax.inject.Inject
 
 interface ImageLoader {
 
+    /**
+     * Method for getting and inserting an image into a container
+     *
+     * @param modifier - An object of the Modifier class for configuring a composable element
+     * @param url - Image url to get it
+     * @param contentDescription - Picture Description
+     * @param contentScale - Represents a rule to apply to scale a source rectangle to be inscribed into a destination
+     */
+
     @Composable
     fun LoadImage(
         modifier: Modifier,
@@ -23,6 +32,15 @@ interface ImageLoader {
 
 @BoundTo(supertype = ImageLoader::class, component = SingletonComponent::class)
 class CoilImageLoader @Inject constructor() : ImageLoader {
+
+    /**
+     * The method downloads an image from the network and inserts it into a composable element
+     *
+     * @param modifier - An object of the Modifier class for configuring a composable element
+     * @param url - Image url to get it
+     * @param contentDescription - Picture Description
+     * @param contentScale - Represents a rule to apply to scale a source rectangle to be inscribed into a destination
+     */
 
     @Composable
     override fun LoadImage(

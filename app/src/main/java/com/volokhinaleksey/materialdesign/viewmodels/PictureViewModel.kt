@@ -12,6 +12,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * A class with the business logic of the Picture of the day Screen.
+ * The class is engaged in obtaining picture of the day and information about it from the repository.
+ *
+ * @param pictureRepository - Repository for getting data
+ */
+
 @HiltViewModel
 class PictureViewModel @Inject constructor(
     private val pictureRepository: PictureRepository
@@ -25,6 +32,10 @@ class PictureViewModel @Inject constructor(
     init {
         getPictureOfTheDay()
     }
+
+    /**
+     * The method gets some state from the repository and performs some actions depending on it
+     */
 
     private fun getPictureOfTheDay() {
         _pictureOfTheDay.value = PictureOfTheDayState.Loading

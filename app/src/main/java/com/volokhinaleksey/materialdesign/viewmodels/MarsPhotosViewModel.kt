@@ -12,6 +12,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * A class with the business logic of the Mars Photos Screen.
+ * The class is engaged in obtaining data about Mars from the repository.
+ *
+ * @param marsPhotosRepository - Repository for getting data
+ */
+
 @HiltViewModel
 class MarsPhotosViewModel @Inject constructor(
     private val marsPhotosRepository: MarsPhotosRepository
@@ -25,6 +32,10 @@ class MarsPhotosViewModel @Inject constructor(
     init {
         getMarsPhotos()
     }
+
+    /**
+     * The method gets some state from the repository and performs some actions depending on it
+     */
 
     private fun getMarsPhotos() {
         _marsPhotos.value = MarsPhotosState.Loading

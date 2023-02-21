@@ -11,12 +11,23 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * A class with the business logic of the Tasks Screen.
+ * The class allows you to work with getting/saving/deleting/changing data to a database
+ *
+ * @param tasksRepository - Repository for getting data
+ */
 @HiltViewModel
 class TasksViewModel @Inject constructor(
     private val tasksRepository: TasksRepository
 ) : ViewModel() {
 
+    /**
+     * searchTasks object for monitoring user requests in search
+     */
+
     private val searchTasks: MutableLiveData<String> = MutableLiveData("")
+
     val tasks: LiveData<List<TasksEntity>> = Transformations.switchMap(searchTasks) { query ->
         if (query.isEmpty()) {
             getAllTasks()
@@ -25,7 +36,16 @@ class TasksViewModel @Inject constructor(
         }
     }
 
-    fun getAllTasks() = tasksRepository.getAllTasks()
+    /**
+     * Method for getting all tasks from the repository
+     */
+
+    private fun getAllTasks() = tasksRepository.getAllTasks()
+
+    /**
+     * Method for deleting a task from the database
+     * @param tasksEntity - deleted model.
+     */
 
     fun delete(tasksEntity: TasksEntity) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -33,11 +53,20 @@ class TasksViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Method for inserting a task to the database
+     */
+
     fun insert(tasksEntity: TasksEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             tasksRepository.insertTask(tasksEntity = tasksEntity)
         }
     }
+
+    /**
+     * Method for updating a task in the database
+     * @param tasksEntity - updated model.
+     */
 
     fun update(tasksEntity: TasksEntity) {
         viewModelScope.launch(Dispatchers.IO) {
