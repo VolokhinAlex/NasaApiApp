@@ -1,6 +1,8 @@
 package com.volokhinaleksey.materialdesign.ui.screens.picture_of_day
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -17,6 +19,12 @@ import com.volokhinaleksey.materialdesign.ui.images.ImageLoader
 import com.volokhinaleksey.materialdesign.ui.widgets.*
 import com.volokhinaleksey.materialdesign.viewmodels.PictureViewModel
 
+/**
+ * The main method for the layout of all the methods of the picture of the day screen
+ * @param pictureViewModel - Picture View Model to work with Repository
+ * @param imageLoader - It's need to load picture of the day image
+ */
+
 @Composable
 fun PictureOfTheDayScreen(
     pictureViewModel: PictureViewModel = hiltViewModel(),
@@ -27,16 +35,19 @@ fun PictureOfTheDayScreen(
     }
 }
 
+/**
+ * A class for processing states coming from the View Model
+ * @param state - The state that came from the repository
+ * @param imageLoader - Needed for downloading and displaying image
+ */
+
 @Composable
 private fun RenderData(
     state: PictureOfTheDayState,
-    imageLoader: ImageLoader,
-    searchState: SearchState = rememberSearchState()
+    imageLoader: ImageLoader
 ) {
     val chipsList = listOf("Image HD", "Image")
-    var selectedItem by remember {
-        mutableStateOf("")
-    }
+    var selectedChip by remember { mutableStateOf("") }
     when (state) {
         is PictureOfTheDayState.Error -> state.message.localizedMessage?.let { ErrorMessage(it) }
         PictureOfTheDayState.Loading -> LoadingProgressBar()
@@ -45,28 +56,29 @@ private fun RenderData(
             Column(
                 modifier = Modifier.padding(top = 20.dp)
             ) {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.CenterEnd
-                ) {
-                    SearchWidget(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 20.dp, end = 20.dp, bottom = 10.dp),
-                        query = searchState.query,
-                        label = stringResource(R.string.search_in_wiki_label)
-                    ) { searchState.query = TextFieldValue(it) }
-                }
+                TopBar()
 
                 SetImageByChips(
-                    selectedItem = selectedItem,
-                    nasaDataDTO = nasaDataDTO,
+                    selectedItem = selectedChip,
+                    pictureOfTheDayDTO = nasaDataDTO,
                     imageLoader = imageLoader
                 )
 
-                ChipsWidget(chips = chipsList, onSelected = {
-                    selectedItem = it
-                }, selectedChip = selectedItem)
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    itemsIndexed(chipsList) { _, item ->
+                        Chip(
+                            title = item,
+                            selected = selectedChip,
+                            onSelected = {
+                                selectedChip = item
+                            }
+                        )
+                    }
+                }
 
                 BottomSheetBehavior(nasaDataDTO = nasaDataDTO)
             }
@@ -74,10 +86,17 @@ private fun RenderData(
     }
 }
 
+/**
+ * Method for installing photos by chips
+ * @param selectedItem - Selected Chip
+ * @param pictureOfTheDayDTO - Data class with information about the picture of the day
+ * @param imageLoader - Needed for downloading and displaying image
+ */
+
 @Composable
 private fun SetImageByChips(
     selectedItem: String,
-    nasaDataDTO: PictureOfTheDayDTO,
+    pictureOfTheDayDTO: PictureOfTheDayDTO,
     imageLoader: ImageLoader
 ) {
     if (selectedItem.contains("HD")) {
@@ -85,7 +104,7 @@ private fun SetImageByChips(
             modifier = Modifier
                 .fillMaxHeight(0.5f)
                 .padding(start = 20.dp, end = 20.dp),
-            url = nasaDataDTO.hdurl.orEmpty(),
+            url = pictureOfTheDayDTO.hdurl.orEmpty(),
             contentDescription = "Image HD of day url",
             contentScale = ContentScale.Crop
         )
@@ -94,9 +113,30 @@ private fun SetImageByChips(
             modifier = Modifier
                 .fillMaxHeight(0.5f)
                 .padding(start = 20.dp, end = 20.dp),
-            url = nasaDataDTO.url.orEmpty(),
+            url = pictureOfTheDayDTO.url.orEmpty(),
             contentDescription = "Image of day url",
             contentScale = ContentScale.Crop
         )
+    }
+}
+
+/**
+ * The method adds a top bar to the picture of the day screen
+ * @param searchState - Search State
+ */
+
+@Composable
+private fun TopBar(searchState: SearchState = rememberSearchState()) {
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.CenterEnd
+    ) {
+        SearchWidget(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 20.dp, end = 20.dp, bottom = 10.dp),
+            query = searchState.query,
+            label = stringResource(R.string.search_in_wiki_label)
+        ) { searchState.query = TextFieldValue(it) }
     }
 }

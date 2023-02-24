@@ -28,6 +28,11 @@ import kotlinx.coroutines.launch
 
 private const val DESCRIPTION_MAX_LINES = 4
 
+/**
+ * Task list screen
+ * @param tasksViewModel - Task View Model
+ */
+
 @Composable
 fun TasksScreen(tasksViewModel: TasksViewModel = hiltViewModel()) {
     var openDialog by remember { mutableStateOf(false) }
@@ -57,7 +62,7 @@ fun TasksScreen(tasksViewModel: TasksViewModel = hiltViewModel()) {
             openDialog = false
         }, onClick = { title, description, priority ->
             if (isDataNotEmpty(title, description)) {
-                tasksViewModel.insert(
+                tasksViewModel.insertTask(
                     TasksEntity(
                         0, title, description, priority.priority
                     )
@@ -70,78 +75,34 @@ fun TasksScreen(tasksViewModel: TasksViewModel = hiltViewModel()) {
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
-@Composable
-private fun RenderData(state: List<TasksEntity>, tasksViewModel: TasksViewModel) {
+/**
+ * A method for processing incoming data from a local database.
+ * @param tasks - The list of tasks.
+ * @param tasksViewModel - View Model for working with tasks
+ */
 
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun RenderData(tasks: List<TasksEntity>, tasksViewModel: TasksViewModel) {
     var openDialog by remember { mutableStateOf(false) }
     var rememberItem by remember {
         mutableStateOf(TasksEntity(0, null, null, null))
     }
 
-    var query by remember { mutableStateOf("") }
-    var searching by remember { mutableStateOf(false) }
-
     LazyColumn {
         stickyHeader {
-            Box {
-                SearchBar(
-                    query = query,
-                    onQueryChange = {
-                        tasksViewModel.viewModelScope.launch {
-                            query = it
-                            searching = true
-                            delay(500)
-                            tasksViewModel.searchChangedQuery(it)
-                            searching = false
-                        }
-                    },
-                    onSearch = {},
-                    active = false,
-                    onActiveChange = {},
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = Icons.Default.Search.name
-                        )
-                    },
-                    trailingIcon = {
-                        when {
-                            searching -> {
-                                CircularProgressIndicator(
-                                    modifier = Modifier
-                                        .padding(horizontal = 6.dp)
-                                        .size(36.dp)
-                                )
-                            }
-                            query.isNotEmpty() -> {
-                                IconButton(onClick = {
-                                    query = ""
-                                }) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Close,
-                                        contentDescription = Icons.Filled.Close.name
-                                    )
-                                }
-                            }
-                        }
-                    },
-                    placeholder = { Text(text = stringResource(R.string.placeholder_search_task)) },
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(start = 10.dp, end = 10.dp),
-                    content = {}
-                )
-            }
+            TasksTopBar(tasksViewModel = tasksViewModel)
         }
 
-        itemsIndexed(state) { _, item ->
+        itemsIndexed(tasks) { _, item ->
+
             val priority = when (item.priority) {
                 Priority.Low.priority -> Priority.Low
                 Priority.Medium.priority -> Priority.Medium
                 Priority.High.priority -> Priority.High
                 else -> Priority.Low
             }
+
             ExpandableCard(
                 content = {
                     Row(
@@ -170,7 +131,7 @@ private fun RenderData(state: List<TasksEntity>, tasksViewModel: TasksViewModel)
                             }
                             IconButton(
                                 onClick = {
-                                    tasksViewModel.delete(item)
+                                    tasksViewModel.deleteTask(item)
                                 }
                             ) {
                                 Icon(
@@ -205,14 +166,16 @@ private fun RenderData(state: List<TasksEntity>, tasksViewModel: TasksViewModel)
                     }
                 )
             )
+
         }
     }
+
     InputDialog(
         isDialogOpen = openDialog,
         onDismissRequest = { openDialog = false },
         onClick = { title, description, itemPriority ->
             if (isDataNotEmpty(title, description)) {
-                tasksViewModel.update(
+                tasksViewModel.updateTask(
                     TasksEntity(
                         id = rememberItem.id,
                         title = title,
@@ -230,7 +193,75 @@ private fun RenderData(state: List<TasksEntity>, tasksViewModel: TasksViewModel)
     )
 }
 
+/**
+ * Method for checking title and description for emptiness
+ * @param title - Task Title
+ * @param description - Task description
+ */
 
 private fun isDataNotEmpty(title: String, description: String): Boolean {
     return title.isNotEmpty() && description.isNotEmpty()
+}
+
+/**
+ * The method adds a top bar to the task screen
+ * @param tasksViewModel - View Model for working with tasks
+ */
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TasksTopBar(tasksViewModel: TasksViewModel) {
+    var query by remember { mutableStateOf("") }
+    var searching by remember { mutableStateOf(false) }
+
+    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
+        SearchBar(
+            query = query,
+            onQueryChange = {
+                tasksViewModel.viewModelScope.launch {
+                    query = it
+                    searching = true
+                    delay(500)
+                    tasksViewModel.searchChangedQuery(it)
+                    searching = false
+                }
+            },
+            onSearch = {},
+            active = false,
+            onActiveChange = {},
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = Icons.Default.Search.name
+                )
+            },
+            trailingIcon = {
+                when {
+                    searching -> {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .padding(horizontal = 6.dp)
+                                .size(36.dp)
+                        )
+                    }
+                    query.isNotEmpty() -> {
+                        IconButton(onClick = {
+                            query = ""
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = Icons.Filled.Close.name
+                            )
+                        }
+                    }
+                }
+            },
+            placeholder = { Text(text = stringResource(R.string.placeholder_search_task)) },
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(start = 10.dp, end = 10.dp),
+            content = {},
+            colors = SearchBarDefaults.colors(containerColor = MaterialTheme.colorScheme.onSecondary)
+        )
+    }
 }

@@ -2,6 +2,8 @@ package com.volokhinaleksey.materialdesign.ui.widgets
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -41,13 +43,14 @@ fun InputDialog(
         AlertDialog(
             onDismissRequest = {
                 onDismissRequest()
-            }
+            },
         ) {
             Surface(
                 modifier = Modifier
                     .wrapContentWidth()
                     .wrapContentHeight(),
-                shape = MaterialTheme.shapes.large
+                shape = MaterialTheme.shapes.large,
+                color = MaterialTheme.colorScheme.background
             ) {
                 Column(
                     modifier = Modifier
@@ -76,15 +79,27 @@ fun InputDialog(
                         placeholder = { Text(text = "Description") }
                     )
 
-                    ChipsWidget(
-                        chips = listOf(
-                            Priority.Low.name,
-                            Priority.Medium.name,
-                            Priority.High.name
-                        ), onSelected = {
-                            selectedItem = it
-                        }, selectedChip = selectedItem
-                    )
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        itemsIndexed(
+                            listOf(
+                                Priority.Low.name,
+                                Priority.Medium.name,
+                                Priority.High.name
+                            )
+                        ) { _, item ->
+                            Chip(
+                                title = item,
+                                selected = selectedItem,
+                                onSelected = {
+                                    selectedItem = item
+                                }
+                            )
+                        }
+                    }
 
                     Button(onClick = {
                         onClick(

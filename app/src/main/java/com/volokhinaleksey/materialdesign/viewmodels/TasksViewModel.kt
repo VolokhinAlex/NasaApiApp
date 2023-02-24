@@ -47,7 +47,7 @@ class TasksViewModel @Inject constructor(
      * @param tasksEntity - deleted model.
      */
 
-    fun delete(tasksEntity: TasksEntity) {
+    fun deleteTask(tasksEntity: TasksEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             tasksRepository.deleteTask(tasksEntity = tasksEntity)
         }
@@ -57,7 +57,7 @@ class TasksViewModel @Inject constructor(
      * Method for inserting a task to the database
      */
 
-    fun insert(tasksEntity: TasksEntity) {
+    fun insertTask(tasksEntity: TasksEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             tasksRepository.insertTask(tasksEntity = tasksEntity)
         }
@@ -68,7 +68,7 @@ class TasksViewModel @Inject constructor(
      * @param tasksEntity - updated model.
      */
 
-    fun update(tasksEntity: TasksEntity) {
+    fun updateTask(tasksEntity: TasksEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             tasksRepository.updateTask(tasksEntity = tasksEntity)
         }

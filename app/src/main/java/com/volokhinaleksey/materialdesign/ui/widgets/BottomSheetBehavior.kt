@@ -10,8 +10,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -57,7 +59,13 @@ fun BottomSheetBehavior(nasaDataDTO: PictureOfTheDayDTO) {
         }
     }
     val imgUrl = buildAnnotatedString {
-        pushStyle(SpanStyle(fontSize = 20.sp, fontFamily = montserratFontFamily))
+        pushStyle(
+            SpanStyle(
+                fontSize = 20.sp,
+                fontFamily = montserratFontFamily,
+                color = Color.Gray
+            )
+        )
         val linkText = "Click this link to open the image in browser"
         val startIndex = linkText.indexOf("link")
         val endIndex = startIndex + 4
@@ -128,5 +136,23 @@ fun BottomSheetBehavior(nasaDataDTO: PictureOfTheDayDTO) {
         sheetShape = RoundedCornerShape(topStart = SheetCornerShape, topEnd = SheetCornerShape),
         scaffoldState = scaffoldState,
         sheetPeekHeight = SheetPeekHeight,
+    )
+}
+
+@Composable
+fun SetTextBottomSheet(text: String) {
+    Text(
+        text = text,
+        modifier = Modifier.padding(8.dp),
+        fontSize = 20.sp
+    )
+}
+
+@Composable
+fun SetTextBottomSheet(text: AnnotatedString) {
+    Text(
+        text = text,
+        modifier = Modifier.padding(8.dp),
+        fontSize = 20.sp
     )
 }

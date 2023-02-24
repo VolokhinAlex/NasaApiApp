@@ -17,6 +17,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.volokhinaleksey.materialdesign.ui.images.CoilImageLoader
 
+/**
+ * A screen for displaying large-size images
+ * @param imageUrl - Link to the photo to upload
+ * @param navController - Needed to navigate between screens
+ */
+
 @Composable
 fun FullSizeImage(imageUrl: String, navController: NavController) {
 

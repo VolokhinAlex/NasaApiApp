@@ -16,4 +16,6 @@
     <string name="placeholder_search_task">Search task</string>
     <string name="copyright">Copyright: </string>
     <string name="splash_screen">SplashScreen</string>
+    <string name="camera_label">Camera</string>
+    <string name="earth_date_label">EarthDate</string>
 </resources>
